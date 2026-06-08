@@ -2,7 +2,10 @@
 import dynamic from "next/dynamic";
 
 // Client components:
-const Map = dynamic(() => import("./components/Map"), { ssr: false });
+const Map = dynamic(() => import("../features/map/components/Map"), {
+  ssr: false,
+  loading: () => <div>Loading the map..</div>,
+});
 
 export default function Home() {
   return (
