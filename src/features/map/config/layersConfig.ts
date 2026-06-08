@@ -13,7 +13,6 @@ export const WMS_LAYERS = [
     transparent: true,
   },
   {
-    //여성밤길치안안전(성폭력)
     id: "IF_0079_WMS",
     name: "여성밤길치안안전(성폭력)",
     url: `https://www.safemap.go.kr/openapi2/IF_0079_WMS?serviceKey=${safemapKey}`,
@@ -23,7 +22,6 @@ export const WMS_LAYERS = [
     transparent: true,
   },
   {
-    // 범죄주의구간(성폭력)
     id: "IF_0085_WMS",
     name: "범죄주의구간(성폭력)",
     url: `https://www.safemap.go.kr/openapi2/IF_0085_WMS?serviceKey=${safemapKey}`,
@@ -34,18 +32,16 @@ export const WMS_LAYERS = [
     opacity: 0.6,
   },
   {
-    //범죄예방환경설계
     id: "IF_0023_WMS",
     name: "범죄예방환경설계",
     url: `https://www.safemap.go.kr/openapi2/IF_0023_WMS?serviceKey=${safemapKey}`,
     layers: "A2SM_CPTED_G",
-    styles: "A2SM_CPTED_G",
+    styles: "",
     format: "image/png",
     transparent: true,
     opacity: 0.6,
   },
   {
-    //치안사고통계(성폭력)
     id: "IF_0070_WMS",
     name: "치안사고통계(성폭력)",
     url: `https://www.safemap.go.kr/openapi2/IF_0070_WMS?serviceKey=${safemapKey}`,

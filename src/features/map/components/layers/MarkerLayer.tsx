@@ -17,7 +17,7 @@ const markers = [
     position: [37.5665, 126.978] as [number, number],
     title: "서울시청",
   },
-  { id: 2, position: [37.551, 126.988] as [number, number], title: "남산타워" },
+  //   { id: 2, position: [37.551, 126.988] as [number, number], title: "남산타워" },
 ];
 
 export default function MarkerLayer() {
