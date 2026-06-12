@@ -1,22 +1,16 @@
-const safemapKey = process.env.NEXT_PUBLIC_SAFEMAP_API_KEY;
-const seoulKey = process.env.NEXT_PUBLIC_SEOUL_API_KEY;
-
-export const WMS_LAYERS = [
-  {
-    // 비상벨
-    id: "IF_0032_WMS",
-    name: "비상벨",
-    url: `https://www.safemap.go.kr/openapi2/IF_0032_WMS?serviceKey=${safemapKey}`,
-    layers: "A2SM_CMMNPOI_EMGBELL",
-    styles: "A2SM_CMMNPOI_EMGBELL",
-    format: "image/png",
-    transparent: true,
-  },
+export const BASE_LAYERS = [
   {
     id: "IF_0079_WMS",
     name: "여성밤길치안안전(성폭력)",
-    url: `https://www.safemap.go.kr/openapi2/IF_0079_WMS?serviceKey=${safemapKey}`,
     layers: "A2SM_CRMNLHSPOT_F1_RAPE",
+    styles: "",
+    format: "image/png",
+    transparent: false,
+  },
+  {
+    id: "IF_0078_WMS",
+    name: "여성밤길치안안전(폭력)",
+    layers: "A2SM_CRMNLHSPOT_F1_VIOLN",
     styles: "",
     format: "image/png",
     transparent: true,
@@ -24,7 +18,6 @@ export const WMS_LAYERS = [
   {
     id: "IF_0085_WMS",
     name: "범죄주의구간(성폭력)",
-    url: `https://www.safemap.go.kr/openapi2/IF_0085_WMS?serviceKey=${safemapKey}`,
     layers: "A2SM_CRMNLHSPOT_TOT",
     styles: "A2SM_CrmnlHspot_Tot_Rape",
     format: "image/png",
@@ -32,9 +25,17 @@ export const WMS_LAYERS = [
     opacity: 0.6,
   },
   {
+    id: "IF_0083_WMS",
+    name: "범죄주의구간(폭력)",
+    layers: "A2SM_CRMNLHSPOT_TOT",
+    styles: "A2SM_CrmnlHspot_Tot_Violn",
+    format: "image/png",
+    transparent: true,
+    opacity: 0.6,
+  },
+  {
     id: "IF_0023_WMS",
     name: "범죄예방환경설계",
-    url: `https://www.safemap.go.kr/openapi2/IF_0023_WMS?serviceKey=${safemapKey}`,
     layers: "A2SM_CPTED_G",
     styles: "",
     format: "image/png",
@@ -42,13 +43,32 @@ export const WMS_LAYERS = [
     opacity: 0.6,
   },
   {
-    id: "IF_0070_WMS",
-    name: "치안사고통계(성폭력)",
-    url: `https://www.safemap.go.kr/openapi2/IF_0070_WMS?serviceKey=${safemapKey}`,
-    layers: "A2SM_CRMNLSTATS",
-    styles: "A2SM_CrmnlStats_Rape",
+    id: "IF_0102_WMS",
+    name: "보안등",
+    layers: "A2SM_CMMNPOI_SECULIGHT",
+    styles: "A2SM_CMMNPOI_07",
     format: "image/png",
     transparent: true,
-    legendUrl: `https://www.safemap.go.kr/openapi2/lgdInfo?serviceKey=${safemapKey}&intId=IF_0070`,
+  },
+  {
+    id: "IF_0032_WMS",
+    name: "안전비상벨",
+    layers: "A2SM_CMMNPOI_EMGBELL",
+    styles: "A2SM_CMMNPOI_EMGBELL",
+    format: "image/png",
+    transparent: false,
+  },
+  {
+    id: "IF_0036_WMS",
+    name: "치안시설",
+    layers: "A2SM_CMMNPOI2",
+    styles: "A2SM_CmmnPoi2",
+    format: "image/png",
   },
 ];
+
+export const WMS_LAYERS = BASE_LAYERS.map((layer) => ({
+  ...layer,
+  // url: `https://www.safemap.go.kr/openapi2/${layer.id}?serviceKey=${safemapKey}`,
+  url: `/api/tiles/${layer.id}`,
+}));

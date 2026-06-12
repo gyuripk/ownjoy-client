@@ -15,13 +15,12 @@ export default function WmsLayer() {
       {WMS_LAYERS.filter((layer) => visibleLayers.includes(layer.id)).map(
         (layer) => (
           <WMSTileLayer
-            //
             key={layer.id}
-            url={layer.url}
+            url={layer.url} // call api
             layers={layer.layers}
             styles={layer.styles || ""}
             format={layer.format}
-            transparent={layer.transparent}
+            transparent={layer.transparent || true}
             opacity={layer.opacity || 0.6} // default: 0.6
           />
         ),
