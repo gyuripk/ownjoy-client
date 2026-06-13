@@ -9,6 +9,7 @@ import VectorTileLayer from "./layers/VectorTileLayer";
 import WmsLayer from "./layers/WmsLayer";
 import MarkerLayer from "./layers/MarkerLayer";
 import { MapFilter } from "./MapFilter";
+import SafeReturnRouteLayer from "./layers/SafetyReturnRouterLayer";
 
 // define backend data type
 interface MarkerData {
@@ -22,14 +23,14 @@ export default function Map() {
   const [markers, setMarkers] = useState<MarkerData[]>([]);
 
   useEffect(() => {
-    // 2. 방금 검증한 백엔드 포트(5001) 주소로 데이터를 요청합니다.
+    // 2. call test api (port: 5001)
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/test-markers`)
       .then((res) => {
-        if (!res.ok) throw new Error("서버 응답 에러");
+        if (!res.ok) throw new Error("Server Response Error");
         return res.json();
       })
       .then((data: MarkerData[]) => {
-        setMarkers(data); // 백엔드가 준 가짜 데이터 2개를 상태값에 저장
+        setMarkers(data); // save mock data in state
       })
       .catch((err) => console.error("백엔드 통신 실패:", err));
   }, []);
@@ -44,7 +45,7 @@ export default function Map() {
       {/* Base map */}
       <VectorTileLayer />
       <WmsLayer />
-      {/* 4. 백엔드에서 받아온 배열을 돌면서 지도 위에 마커를 차곡차곡 꽂아줍니다. */}
+      {/* display markers by looping */}
       {markers.map((marker) => (
         <Marker key={marker.id} position={[marker.lat, marker.lng]}>
           <Popup>
@@ -56,6 +57,7 @@ export default function Map() {
         </Marker>
       ))}
       <MarkerLayer />
+      <SafeReturnRouteLayer />
       <MapFilter />
     </MapContainer>
   );
