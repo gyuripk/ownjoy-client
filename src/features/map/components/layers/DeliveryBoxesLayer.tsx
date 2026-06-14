@@ -4,7 +4,7 @@ import { useMap, useMapEvents, GeoJSON } from "react-leaflet";
 import L from "leaflet";
 
 const deliveryBoxIcon = L.icon({
-  iconUrl: "/icon-delivery-box.svg",
+  iconUrl: "/icon-delivery-box.png",
   iconSize: [32, 32],
   iconAnchor: [16, 16],
   popupAnchor: [0, -16],
@@ -39,7 +39,7 @@ export default function DeliveryBoxesLayer() {
   }, []); // run once on mount, never again
 
   // re-fetch on moveend
-  useMapEvents({ moveend: fetchBoxes }); // pass the func (don't call it yet)
+  useMapEvents({ moveend: fetchBoxes, zoomend: fetchBoxes }); // pass the func (don't call it yet)
 
   if (!boxes) return null;
 

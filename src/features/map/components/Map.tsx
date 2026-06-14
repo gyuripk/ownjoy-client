@@ -8,12 +8,14 @@ import WmsLayer from "./layers/WmsLayer";
 import { MapFilter } from "./MapFilter";
 import SafeReturnRouteLayer from "./layers/SafetyReturnRouterLayer";
 import DeliveryBoxesLayer from "./layers/DeliveryBoxesLayer";
+import EmergencyBellLayer from "./layers/EmergencyBellLayer";
 
 export default function Map() {
   return (
     <MapContainer
       center={[37.5665, 126.978]} // lattitude , longitude
-      zoom={11}
+      zoom={14}
+      maxZoom={18}
       style={{ height: "100vh", width: "100%" }}
       scrollWheelZoom={true}
     >
@@ -24,6 +26,7 @@ export default function Map() {
       {/* Infra locations */}
       <SafeReturnRouteLayer />
       <DeliveryBoxesLayer />
+      <EmergencyBellLayer />
       {/* Filter */}
       <MapFilter />
     </MapContainer>

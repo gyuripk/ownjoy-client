@@ -1,0 +1,35 @@
+.cluster {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.bell-cluster {
+  background: #e53e3e;
+  width: 36px;
+  height: 36px;
+}
+
+.delivery-cluster {
+  background: #3182ce;
+  width: 36px;
+  height: 36px;
+}
+
+.cctv-cluster {
+  background: #6b46c1;
+  width: 36px;
+  height: 36px;
+}
+
+.store-cluster {
+  background: #38a169;
+  width: 36px;
+  height: 36px;
+}
