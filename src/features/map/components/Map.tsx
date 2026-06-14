@@ -11,6 +11,7 @@ import DeliveryBoxesLayer from "./layers/DeliveryBoxesLayer";
 import EmergencyBellLayer from "./layers/EmergencyBellLayer";
 import SafeStoresLayer from "./layers/SafeStoresLayer";
 import SmartStreetLightsLayer from "./layers/SmartStreetLightsLayer";
+import CctvLayer from "./layers/CctvLayer";
 
 export default function Map() {
   return (
@@ -31,6 +32,7 @@ export default function Map() {
       <EmergencyBellLayer />
       <SafeStoresLayer />
       <SmartStreetLightsLayer />
+      <CctvLayer />
       {/* Filter */}
       <MapFilter />
     </MapContainer>
