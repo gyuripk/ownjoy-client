@@ -5,7 +5,7 @@ import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import "./cluster-styles.css";
 
-interface DeliveryBoxFeature {
+interface SafeStoreFeature {
   type: "Feature";
   geometry: {
     type: "Point";
@@ -15,39 +15,34 @@ interface DeliveryBoxFeature {
     id: number;
     name: string;
     road_address: string;
-    weekday_open: string;
-    weekday_close: string;
-    saturday_open: string;
-    saturday_close: string;
-    holiday_open: string;
-    holiday_close: string;
-    late_fee: number;
-    free_hours: number;
-    support_phone: string;
+    phone: string;
+    police_station: string;
+    is_operating: boolean;
   };
 }
 
-interface DeliveryBoxCollection {
+interface SafeStoreCollection {
   type: "FeatureCollection";
-  features: DeliveryBoxFeature[];
+  features: SafeStoreFeature[];
 }
 
-const deliveryBoxIcon = L.icon({
-  iconUrl: "/icon-delivery-box.png",
+const safeStoreIcon = L.icon({
+  iconUrl: "/icon-safe-store.png",
   iconSize: [32, 32],
   iconAnchor: [16, 16],
   popupAnchor: [0, -16],
 });
 
-export default function DeliveryBoxesLayer() {
+export default function SafeStoresLayer() {
   const map = useMap();
-  const [boxes, setBoxes] = useState<DeliveryBoxCollection | null>(null);
+  const [stores, setStores] = useState<SafeStoreCollection | null>(null);
 
-  function fetchBoxes() {
+  function fetchStores() {
     if (map.getZoom() < 14) {
-      setBoxes(null);
+      setStores(null);
       return;
     }
+
     const bounds = map.getBounds();
     const bbox = [
       bounds.getWest(),
@@ -57,19 +52,19 @@ export default function DeliveryBoxesLayer() {
     ].join(",");
 
     fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/safety/delivery-boxes?bbox=${bbox}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/safety/safe-stores?bbox=${bbox}`,
     )
       .then((res) => res.json())
-      .then((data) => setBoxes(data));
+      .then((data) => setStores(data));
   }
 
   useEffect(() => {
-    fetchBoxes();
+    fetchStores();
   }, []);
 
-  useMapEvents({ moveend: fetchBoxes, zoomend: fetchBoxes });
+  useMapEvents({ moveend: fetchStores, zoomend: fetchStores });
 
-  if (!boxes) return null;
+  if (!stores) return null;
 
   return (
     <MarkerClusterGroup
@@ -78,20 +73,20 @@ export default function DeliveryBoxesLayer() {
       spiderfyOnMaxZoom={false}
       iconCreateFunction={(cluster: { getChildCount: () => number }) =>
         L.divIcon({
-          html: `<div class="cluster delivery-cluster">${cluster.getChildCount()}</div>`,
+          html: `<div class="cluster store-cluster">${cluster.getChildCount()}</div>`,
           className: "",
           iconSize: [36, 36],
         })
       }
     >
-      {boxes.features.map((feature, index) => (
+      {stores.features.map((feature, index) => (
         <Marker
           key={index}
           position={[
             feature.geometry.coordinates[1],
             feature.geometry.coordinates[0],
           ]}
-          icon={deliveryBoxIcon}
+          icon={safeStoreIcon}
         />
       ))}
     </MarkerClusterGroup>

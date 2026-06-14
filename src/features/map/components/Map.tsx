@@ -9,6 +9,8 @@ import { MapFilter } from "./MapFilter";
 import SafeReturnRouteLayer from "./layers/SafetyReturnRouterLayer";
 import DeliveryBoxesLayer from "./layers/DeliveryBoxesLayer";
 import EmergencyBellLayer from "./layers/EmergencyBellLayer";
+import SafeStoresLayer from "./layers/SafeStoresLayer";
+import SmartStreetLightsLayer from "./layers/SmartStreetLightsLayer";
 
 export default function Map() {
   return (
@@ -27,6 +29,8 @@ export default function Map() {
       <SafeReturnRouteLayer />
       <DeliveryBoxesLayer />
       <EmergencyBellLayer />
+      <SafeStoresLayer />
+      <SmartStreetLightsLayer />
       {/* Filter */}
       <MapFilter />
     </MapContainer>

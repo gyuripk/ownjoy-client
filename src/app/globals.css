@@ -24,3 +24,7 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.maplibregl-canvas {
+  filter: saturate(0.4) brightness(1.05);
+}

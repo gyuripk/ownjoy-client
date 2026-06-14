@@ -5,7 +5,7 @@ import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import "./cluster-styles.css";
 
-interface DeliveryBoxFeature {
+interface SmartStreetLightFeature {
   type: "Feature";
   geometry: {
     type: "Point";
@@ -13,41 +13,37 @@ interface DeliveryBoxFeature {
   };
   properties: {
     id: number;
-    name: string;
+    lamp_type: string;
     road_address: string;
-    weekday_open: string;
-    weekday_close: string;
-    saturday_open: string;
-    saturday_close: string;
-    holiday_open: string;
-    holiday_close: string;
-    late_fee: number;
-    free_hours: number;
-    support_phone: string;
+    always_on: boolean;
+    has_cctv: boolean;
+    has_wifi: boolean;
+    has_emergency_call: boolean;
   };
 }
 
-interface DeliveryBoxCollection {
+interface SmartStreetLightCollection {
   type: "FeatureCollection";
-  features: DeliveryBoxFeature[];
+  features: SmartStreetLightFeature[];
 }
 
-const deliveryBoxIcon = L.icon({
-  iconUrl: "/icon-delivery-box.png",
+const streetLightIcon = L.icon({
+  iconUrl: "/icon-street-light.png",
   iconSize: [32, 32],
   iconAnchor: [16, 16],
   popupAnchor: [0, -16],
 });
 
-export default function DeliveryBoxesLayer() {
+export default function SmartStreetLightsLayer() {
   const map = useMap();
-  const [boxes, setBoxes] = useState<DeliveryBoxCollection | null>(null);
+  const [lights, setLights] = useState<SmartStreetLightCollection | null>(null);
 
-  function fetchBoxes() {
+  function fetchLights() {
     if (map.getZoom() < 14) {
-      setBoxes(null);
+      setLights(null);
       return;
     }
+
     const bounds = map.getBounds();
     const bbox = [
       bounds.getWest(),
@@ -57,41 +53,41 @@ export default function DeliveryBoxesLayer() {
     ].join(",");
 
     fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/safety/delivery-boxes?bbox=${bbox}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/safety/smart-street-lights?bbox=${bbox}`,
     )
       .then((res) => res.json())
-      .then((data) => setBoxes(data));
+      .then((data) => setLights(data));
   }
 
   useEffect(() => {
-    fetchBoxes();
+    fetchLights();
   }, []);
 
-  useMapEvents({ moveend: fetchBoxes, zoomend: fetchBoxes });
+  useMapEvents({ moveend: fetchLights, zoomend: fetchLights });
 
-  if (!boxes) return null;
+  if (!lights) return null;
 
   return (
     <MarkerClusterGroup
-      maxClusterRadius={100}
+      maxClusterRadius={80}
       disableClusteringAtZoom={17}
       spiderfyOnMaxZoom={false}
       iconCreateFunction={(cluster: { getChildCount: () => number }) =>
         L.divIcon({
-          html: `<div class="cluster delivery-cluster">${cluster.getChildCount()}</div>`,
+          html: `<div class="cluster light-cluster">${cluster.getChildCount()}</div>`,
           className: "",
           iconSize: [36, 36],
         })
       }
     >
-      {boxes.features.map((feature, index) => (
+      {lights.features.map((feature, index) => (
         <Marker
           key={index}
           position={[
             feature.geometry.coordinates[1],
             feature.geometry.coordinates[0],
           ]}
-          icon={deliveryBoxIcon}
+          icon={streetLightIcon}
         />
       ))}
     </MarkerClusterGroup>
