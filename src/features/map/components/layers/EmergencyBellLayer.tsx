@@ -79,7 +79,7 @@ export default function EmergencyBellLayer() {
   return (
     <MarkerClusterGroup
       maxClusterRadius={100}
-      disableClusteringAtZoom={16}
+      disableClusteringAtZoom={17}
       spiderfyOnMaxZoom={false}
       iconCreateFunction={(cluster: { getChildCount: () => number }) =>
         L.divIcon({
