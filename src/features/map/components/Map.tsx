@@ -7,9 +7,9 @@ import { MapContainer, Marker, Popup } from "react-leaflet"; // useMap: hooks
 import "leaflet/dist/leaflet.css";
 import VectorTileLayer from "./layers/VectorTileLayer";
 import WmsLayer from "./layers/WmsLayer";
-import MarkerLayer from "./layers/MarkerLayer";
 import { MapFilter } from "./MapFilter";
 import SafeReturnRouteLayer from "./layers/SafetyReturnRouterLayer";
+import DeliveryBoxesLayer from "./layers/DeliveryBoxesLayer";
 
 // define backend data type
 interface MarkerData {
@@ -56,8 +56,9 @@ export default function Map() {
           </Popup>
         </Marker>
       ))}
-      <MarkerLayer />
+
       <SafeReturnRouteLayer />
+      <DeliveryBoxesLayer />
       <MapFilter />
     </MapContainer>
   );
