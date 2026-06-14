@@ -1,6 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useMap, useMapEvents, GeoJSON } from "react-leaflet";
+import L from "leaflet";
+
+const deliveryBoxIcon = L.icon({
+  iconUrl: "/icon-delivery-box.svg",
+  iconSize: [32, 32],
+  iconAnchor: [16, 16],
+  popupAnchor: [0, -16],
+});
 
 export default function DeliveryBoxesLayer() {
   const map = useMap();
@@ -37,5 +45,13 @@ export default function DeliveryBoxesLayer() {
 
   // render with GeoJSON
   // JSON.stringify: JS obj -> string
-  return <GeoJSON key={JSON.stringify(boxes)} data={boxes} />;
+  return (
+    <GeoJSON
+      key={JSON.stringify(boxes)}
+      data={boxes}
+      pointToLayer={(feature, latlng) =>
+        L.marker(latlng, { icon: deliveryBoxIcon })
+      }
+    />
+  );
 }
