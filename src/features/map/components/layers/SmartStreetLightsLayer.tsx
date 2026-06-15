@@ -4,13 +4,12 @@ import { useMap, useMapEvents, Marker } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import "./cluster-styles.css";
+import { createMarkerIcon } from "./markerIcon";
+import { getBbox } from "../../utils/mapUtils";
 
 interface SmartStreetLightFeature {
   type: "Feature";
-  geometry: {
-    type: "Point";
-    coordinates: [number, number];
-  };
+  geometry: { type: "Point"; coordinates: [number, number] };
   properties: {
     id: number;
     lamp_type: string;
@@ -27,43 +26,32 @@ interface SmartStreetLightCollection {
   features: SmartStreetLightFeature[];
 }
 
-const streetLightIcon = L.icon({
-  iconUrl: "/icon-street-light.png",
-  iconSize: [32, 32],
-  iconAnchor: [16, 16],
-  popupAnchor: [0, -16],
-});
+const streetLightIcon = createMarkerIcon("/icon-street-light.png", "light-marker");
+
+async function fetchLights(bbox: string): Promise<SmartStreetLightCollection> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/safety/smart-street-lights?bbox=${bbox}`);
+  return res.json();
+}
 
 export default function SmartStreetLightsLayer() {
   const map = useMap();
   const [lights, setLights] = useState<SmartStreetLightCollection | null>(null);
 
-  function fetchLights() {
-    if (map.getZoom() < 14) {
-      setLights(null);
-      return;
-    }
-
-    const bounds = map.getBounds();
-    const bbox = [
-      bounds.getWest(),
-      bounds.getSouth(),
-      bounds.getEast(),
-      bounds.getNorth(),
-    ].join(",");
-
-    fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/safety/smart-street-lights?bbox=${bbox}`,
-    )
-      .then((res) => res.json())
-      .then((data) => setLights(data));
-  }
-
   useEffect(() => {
-    fetchLights();
-  }, []);
+    if (map.getZoom() < 14) return;
+    fetchLights(getBbox(map)).then(setLights);
+  }, [map]);
 
-  useMapEvents({ moveend: fetchLights, zoomend: fetchLights });
+  useMapEvents({
+    moveend: () => {
+      if (map.getZoom() < 14) return void setLights(null);
+      fetchLights(getBbox(map)).then(setLights);
+    },
+    zoomend: () => {
+      if (map.getZoom() < 14) return void setLights(null);
+      fetchLights(getBbox(map)).then(setLights);
+    },
+  });
 
   if (!lights) return null;
 
@@ -83,10 +71,7 @@ export default function SmartStreetLightsLayer() {
       {lights.features.map((feature, index) => (
         <Marker
           key={index}
-          position={[
-            feature.geometry.coordinates[1],
-            feature.geometry.coordinates[0],
-          ]}
+          position={[feature.geometry.coordinates[1], feature.geometry.coordinates[0]]}
           icon={streetLightIcon}
         />
       ))}

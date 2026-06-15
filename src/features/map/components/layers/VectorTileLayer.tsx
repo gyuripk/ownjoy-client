@@ -2,7 +2,6 @@ import { useMap } from "react-leaflet";
 import { useEffect } from "react";
 import L from "leaflet";
 import "@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl";
-import { Map as MapLibreMap } from "maplibre-gl";
 
 export default function VectorTileLayer() {
   const map = useMap();
@@ -14,7 +13,7 @@ export default function VectorTileLayer() {
     }).addTo(map);
 
     return () => {
-      // remove layer when commponent unmount
+      // remove layer when component unmounts
       gl.remove();
     };
   }, [map]);
