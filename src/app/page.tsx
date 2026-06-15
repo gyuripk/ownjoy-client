@@ -98,7 +98,7 @@ export default function Home() {
           />
         </div>
         {/* Scrollable content */}
-        <div className="overflow-y-auto pb-8" style={{ maxHeight: "calc(72vh - 5rem)" }}>
+        <div className="overflow-y-auto pb-2" style={{ maxHeight: "calc(72vh - 5rem)" }}>
           <SidePanel />
         </div>
       </div>
