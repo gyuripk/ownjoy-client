@@ -50,7 +50,7 @@ export default function SidePanel() {
               <button
                 key={category.id}
                 onClick={() => setSelectedCategoryId(isSelected ? null : category.id)}
-                className="flex flex-col items-center justify-center gap-1 py-3 transition-all border-b-2"
+                className="flex flex-col items-center justify-center gap-1 py-3 transition-all border-b-2 overflow-hidden min-w-0"
                 style={{
                   borderBottomColor: isSelected ? color : "transparent",
                   backgroundColor: isSelected ? `${color}10` : "transparent",
@@ -58,7 +58,7 @@ export default function SidePanel() {
               >
                 {category.icon && <Image src={category.icon} alt="" width={32} height={32} />}
                 <span
-                  className="text-[10px] text-center leading-tight font-semibold"
+                  className="text-[10px] text-center leading-tight font-semibold w-full break-keep px-1"
                   style={{ color: isSelected ? color : "#6b7280" }}
                 >
                   {category.name}
@@ -70,7 +70,7 @@ export default function SidePanel() {
 
         {/* Sub-layer chips */}
         {selectedCategory && (
-          <div className="flex gap-2 overflow-x-auto p-3 pb-4">
+          <div className="flex flex-wrap gap-2 p-3 pb-4">
             {selectedCategory.layers.map((layer) => {
               const active = visibleLayers.includes(layer.id);
               const groupIds = selectedCategory.layers.map((l) => l.id);
@@ -83,7 +83,7 @@ export default function SidePanel() {
                       ? toggleLayer(layer.id)
                       : selectExclusively(layer.id, groupIds)
                   }
-                  className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs whitespace-nowrap border transition-all"
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs border transition-all"
                   style={
                     active
                       ? { backgroundColor: color, color: "white", borderColor: color }
