@@ -1,3 +1,20 @@
+.map-marker {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28), 0 2px 4px rgba(0, 0, 0, 0.12);
+}
+
+.cctv-marker     { border: 3px solid #6b46c1; }
+.bell-marker     { border: 3px solid #e53e3e; }
+.delivery-marker { border: 3px solid #3182ce; }
+.store-marker    { border: 3px solid #38a169; }
+.light-marker    { border: 3px solid #d69e2e; }
+
 .cluster {
   border-radius: 50%;
   display: flex;

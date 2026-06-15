@@ -7,71 +7,70 @@ import "./cluster-styles.css";
 import { createMarkerIcon } from "./markerIcon";
 import { getBbox } from "../../utils/mapUtils";
 
-interface SafeStoreFeature {
+interface CctvFeature {
   type: "Feature";
   geometry: { type: "Point"; coordinates: [number, number] };
   properties: {
-    id: number;
-    name: string;
+    source_id: string;
     road_address: string;
-    phone: string;
-    police_station: string;
-    is_operating: boolean;
+    lot_address: string;
+    purpose: string;
+    camera_count: number;
   };
 }
 
-interface SafeStoreCollection {
+interface CctvCollection {
   type: "FeatureCollection";
-  features: SafeStoreFeature[];
+  features: CctvFeature[];
 }
 
-const safeStoreIcon = createMarkerIcon("/icon-safe-store.png", "store-marker", -6, [-12, 12]);
+const cctvIcon = createMarkerIcon("/icon-cctv.png", "cctv-marker", -10, [-12, -12]);
 
-async function fetchStores(bbox: string): Promise<SafeStoreCollection> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/safety/safe-stores?bbox=${bbox}`);
+async function fetchCctvs(bbox: string): Promise<CctvCollection> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/safety/cctv?bbox=${bbox}`);
   return res.json();
 }
 
-export default function SafeStoresLayer() {
+export default function CctvLayer() {
   const map = useMap();
-  const [stores, setStores] = useState<SafeStoreCollection | null>(null);
+  const [cctvs, setCctvs] = useState<CctvCollection | null>(null);
 
   useEffect(() => {
     if (map.getZoom() < 14) return;
-    fetchStores(getBbox(map)).then(setStores);
+    fetchCctvs(getBbox(map)).then(setCctvs);
   }, [map]);
 
   useMapEvents({
     moveend: () => {
-      if (map.getZoom() < 14) return void setStores(null);
-      fetchStores(getBbox(map)).then(setStores);
+      if (map.getZoom() < 14) return void setCctvs(null);
+      fetchCctvs(getBbox(map)).then(setCctvs);
     },
     zoomend: () => {
-      if (map.getZoom() < 14) return void setStores(null);
-      fetchStores(getBbox(map)).then(setStores);
+      if (map.getZoom() < 14) return void setCctvs(null);
+      fetchCctvs(getBbox(map)).then(setCctvs);
     },
   });
 
-  if (!stores) return null;
+  if (!cctvs) return null;
 
   return (
     <MarkerClusterGroup
-      maxClusterRadius={80}
+      maxClusterRadius={150}
       disableClusteringAtZoom={17}
       spiderfyOnMaxZoom={false}
       iconCreateFunction={(cluster: { getChildCount: () => number }) =>
         L.divIcon({
-          html: `<div class="cluster store-cluster">${cluster.getChildCount()}</div>`,
+          html: `<div class="cluster cctv-cluster">${cluster.getChildCount()}</div>`,
           className: "",
           iconSize: [36, 36],
         })
       }
     >
-      {stores.features.map((feature, index) => (
+      {cctvs.features.map((feature, index) => (
         <Marker
           key={index}
           position={[feature.geometry.coordinates[1], feature.geometry.coordinates[0]]}
-          icon={safeStoreIcon}
+          icon={cctvIcon}
         />
       ))}
     </MarkerClusterGroup>

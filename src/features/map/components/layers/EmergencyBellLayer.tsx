@@ -1,16 +1,15 @@
 "use client";
 import "./cluster-styles.css";
 import L from "leaflet";
+import { getBbox } from "../../utils/mapUtils";
+import { createMarkerIcon } from "./markerIcon";
 import { useEffect, useState } from "react";
 import { useMap, useMapEvents, Marker } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 
 interface BellFeature {
   type: "Feature";
-  geometry: {
-    type: "Point";
-    coordinates: [number, number];
-  };
+  geometry: { type: "Point"; coordinates: [number, number] };
   properties: {
     source_id: string;
     install_place_type: string;
@@ -28,57 +27,40 @@ interface BellCollection {
   features: BellFeature[];
 }
 
-// custome icon
-const emergencyBellIcon = L.icon({
-  iconUrl: "/icon-emergency-bell.png",
-  iconSize: [32, 32],
-  iconAnchor: [16, 16],
-  popupAnchor: [0, -16],
-});
+const emergencyBellIcon = createMarkerIcon("/icon-emergency-bell.png", "bell-marker", -8, [12, -12]);
+
+async function fetchBells(bbox: string): Promise<BellCollection> {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/safety/emergency-bells?bbox=${bbox}`,
+  );
+  return res.json();
+}
 
 export default function EmergencyBellLayer() {
-  // create map
   const map = useMap();
   const [bells, setBells] = useState<BellCollection | null>(null);
 
-  // fetch bells
-  function fetchBells() {
-    if (map.getZoom() < 14) {
-      setBells(null);
-      return;
-    }
-    // get bounds
-    const bounds = map.getBounds();
-    // build bbox
-    const bbox = [
-      bounds.getWest(),
-      bounds.getSouth(),
-      bounds.getEast(),
-      bounds.getNorth(),
-    ].join(",");
-
-    // fetch data from backend api
-    // set bells with fetched data
-    fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/safety/emergency-bells?bbox=${bbox}`, // send bbox info using query
-    )
-      .then((res) => res.json()) // HTTP res -> JS ob
-      .then((data) => setBells(data)); //GeoJSON data
-  }
-
   useEffect(() => {
-    fetchBells();
-  }, []);
+    if (map.getZoom() < 14) return;
+    fetchBells(getBbox(map)).then(setBells);
+  }, [map]);
 
-  // re-fetch when user move screen
-  useMapEvents({ moveend: fetchBells, zoomend: fetchBells });
+  useMapEvents({
+    moveend: () => {
+      if (map.getZoom() < 14) return void setBells(null);
+      fetchBells(getBbox(map)).then(setBells);
+    },
+    zoomend: () => {
+      if (map.getZoom() < 14) return void setBells(null);
+      fetchBells(getBbox(map)).then(setBells);
+    },
+  });
 
   if (!bells) return null;
 
-  // render GeoJSON FeatureCollection
   return (
     <MarkerClusterGroup
-      maxClusterRadius={100}
+      maxClusterRadius={150}
       disableClusteringAtZoom={17}
       spiderfyOnMaxZoom={false}
       iconCreateFunction={(cluster: { getChildCount: () => number }) =>
@@ -92,10 +74,7 @@ export default function EmergencyBellLayer() {
       {bells.features.map((feature, index) => (
         <Marker
           key={index}
-          position={[
-            feature.geometry.coordinates[1],
-            feature.geometry.coordinates[0],
-          ]}
+          position={[feature.geometry.coordinates[1], feature.geometry.coordinates[0]]}
           icon={emergencyBellIcon}
         />
       ))}

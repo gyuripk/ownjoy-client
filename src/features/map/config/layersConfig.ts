@@ -72,3 +72,80 @@ export const WMS_LAYERS = BASE_LAYERS.map((layer) => ({
   // url: `https://www.safemap.go.kr/openapi2/${layer.id}?serviceKey=${safemapKey}`,
   url: `/api/tiles/${layer.id}`,
 }));
+
+export const LAYER_CATEGORIES = [
+  {
+    id: "crime-zone",
+    name: "범죄주의구간",
+    icon: "/icon-crime-zone.png",
+    multiSelect: false,
+    layers: [
+      { id: "IF_0085_WMS", name: "성폭력", type: "wms" },
+      { id: "IF_0083_WMS", name: "폭력", type: "wms" },
+    ],
+  },
+  {
+    id: "crime-night",
+    name: "여성밤길치안안전",
+    icon: "/icon-womens-night-safety.png",
+    multiSelect: false,
+    layers: [
+      { id: "IF_0079_WMS", name: "성폭력", type: "wms" },
+      { id: "IF_0078_WMS", name: "폭력", type: "wms" },
+    ],
+  },
+  {
+    id: "security-infra",
+    name: "치안시설",
+    icon: "/icon-security-infra.png",
+    multiSelect: true,
+    layers: [
+      { id: "cctv", name: "CCTV", type: "point", icon: "/icon-cctv.png" },
+      {
+        id: "smart-street-lights",
+        name: "스마트 가로등",
+        type: "point",
+        icon: "/icon-street-light.png",
+      },
+      {
+        id: "emergency-bells",
+        name: "비상벨",
+        type: "point",
+        icon: "/icon-emergency-bell.png",
+      },
+      {
+        id: "delivery-boxes",
+        name: "안심택배함",
+        type: "point",
+        icon: "/icon-delivery-box.png",
+      },
+      { id: "IF_0102_WMS", name: "보안등", type: "wms", icon: "/icon-security-light.png" },
+    ],
+  },
+  {
+    id: "security-service",
+    name: "치안서비스",
+    icon: "/icon-security-service.png",
+    multiSelect: true,
+    layers: [
+      {
+        id: "safe-return-routes",
+        name: "안심귀갓길",
+        type: "point",
+        icon: "/icon-safe-return-route.png",
+      },
+      {
+        id: "safe-stores",
+        name: "여성안심지킴이집",
+        type: "point",
+        icon: "/icon-safe-store.png",
+      },
+      {
+        id: "IF_0023_WMS",
+        name: "CPTED 구역",
+        type: "wms",
+        icon: "/icon-cpted-zone.png",
+      },
+    ],
+  },
+];

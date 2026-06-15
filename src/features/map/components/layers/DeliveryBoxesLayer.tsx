@@ -4,13 +4,12 @@ import { useMap, useMapEvents, Marker } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import "./cluster-styles.css";
+import { createMarkerIcon } from "./markerIcon";
+import { getBbox } from "../../utils/mapUtils";
 
 interface DeliveryBoxFeature {
   type: "Feature";
-  geometry: {
-    type: "Point";
-    coordinates: [number, number];
-  };
+  geometry: { type: "Point"; coordinates: [number, number] };
   properties: {
     id: number;
     name: string;
@@ -32,48 +31,38 @@ interface DeliveryBoxCollection {
   features: DeliveryBoxFeature[];
 }
 
-const deliveryBoxIcon = L.icon({
-  iconUrl: "/icon-delivery-box.png",
-  iconSize: [32, 32],
-  iconAnchor: [16, 16],
-  popupAnchor: [0, -16],
-});
+const deliveryBoxIcon = createMarkerIcon("/icon-delivery-box.png", "delivery-marker", 0, [12, 12]);
+
+async function fetchBoxes(bbox: string): Promise<DeliveryBoxCollection> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/safety/delivery-boxes?bbox=${bbox}`);
+  return res.json();
+}
 
 export default function DeliveryBoxesLayer() {
   const map = useMap();
   const [boxes, setBoxes] = useState<DeliveryBoxCollection | null>(null);
 
-  function fetchBoxes() {
-    if (map.getZoom() < 14) {
-      setBoxes(null);
-      return;
-    }
-    const bounds = map.getBounds();
-    const bbox = [
-      bounds.getWest(),
-      bounds.getSouth(),
-      bounds.getEast(),
-      bounds.getNorth(),
-    ].join(",");
-
-    fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/safety/delivery-boxes?bbox=${bbox}`,
-    )
-      .then((res) => res.json())
-      .then((data) => setBoxes(data));
-  }
-
   useEffect(() => {
-    fetchBoxes();
-  }, []);
+    if (map.getZoom() < 14) return;
+    fetchBoxes(getBbox(map)).then(setBoxes);
+  }, [map]);
 
-  useMapEvents({ moveend: fetchBoxes, zoomend: fetchBoxes });
+  useMapEvents({
+    moveend: () => {
+      if (map.getZoom() < 14) return void setBoxes(null);
+      fetchBoxes(getBbox(map)).then(setBoxes);
+    },
+    zoomend: () => {
+      if (map.getZoom() < 14) return void setBoxes(null);
+      fetchBoxes(getBbox(map)).then(setBoxes);
+    },
+  });
 
   if (!boxes) return null;
 
   return (
     <MarkerClusterGroup
-      maxClusterRadius={100}
+      maxClusterRadius={80}
       disableClusteringAtZoom={17}
       spiderfyOnMaxZoom={false}
       iconCreateFunction={(cluster: { getChildCount: () => number }) =>
@@ -87,10 +76,7 @@ export default function DeliveryBoxesLayer() {
       {boxes.features.map((feature, index) => (
         <Marker
           key={index}
-          position={[
-            feature.geometry.coordinates[1],
-            feature.geometry.coordinates[0],
-          ]}
+          position={[feature.geometry.coordinates[1], feature.geometry.coordinates[0]]}
           icon={deliveryBoxIcon}
         />
       ))}
