@@ -13,6 +13,7 @@ import { LAYER_CATEGORIES } from "@/features/map/config/layersConfig";
 import { CATEGORY_COLORS } from "@/components/SidePanel";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
+import SearchBar from "@/features/map/components/SearchBar";
 
 const Map = dynamic(() => import("../../features/map/components/Map"), {
   ssr: false,
@@ -70,6 +71,17 @@ export default function Home() {
               })}
             </div>
           )}
+        </div>
+
+        {/* Search bar: desktop tracks panel edge, mobile full-width at top */}
+        <div
+          className="hidden md:block absolute top-3 z-1000 w-[clamp(18rem,35vw,28rem)] transition-all duration-300"
+          style={{ left: isPanelOpen ? "calc(18rem + 0.75rem)" : "calc(3rem + 0.75rem)" }}
+        >
+          <SearchBar />
+        </div>
+        <div className="md:hidden absolute top-3 left-3 right-3 z-1000">
+          <SearchBar />
         </div>
 
         {/* Desktop: toggle button */}

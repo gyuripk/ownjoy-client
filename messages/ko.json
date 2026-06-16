@@ -3,6 +3,10 @@
     "title": "여성 안심지도",
     "description": "전국 여성 안전 정보 지도"
   },
+  "search": {
+    "placeholder": "주소 검색",
+    "noResults": "검색 결과가 없습니다"
+  },
   "header": {
     "title": "여성 안심지도",
     "subtitle": "전국 여성 안전 정보 지도"

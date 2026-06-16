@@ -5,6 +5,7 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["192.168.0.4"],
+  reactStrictMode: false, // Leaflet is not compatible with React StrictMode
 };
 
 export default withNextIntl(nextConfig);
