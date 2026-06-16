@@ -1,0 +1,37 @@
+{
+  "metadata": {
+    "title": "Women's Safety Map",
+    "description": "National Women's Safety Information Map"
+  },
+  "header": {
+    "title": "Women's Safety Map",
+    "subtitle": "National Women's Safety Info"
+  },
+  "panel": {
+    "title": "Layer Filter",
+    "subtitle": "Select information to show on the map",
+    "selected": "Selected:"
+  },
+  "categories": {
+    "crime-zone": "Crime Caution Zones",
+    "crime-night": "Women's Night Safety",
+    "security-infra": "Security Facilities",
+    "security-service": "Security Services"
+  },
+  "layers": {
+    "IF_0085_WMS": "Sexual Violence",
+    "IF_0083_WMS": "Violence",
+    "IF_0079_WMS": "Sexual Violence",
+    "IF_0078_WMS": "Violence",
+    "cctv": "CCTV",
+    "smart-street-lights": "Smart Street Lights",
+    "emergency-bells": "Emergency Bells",
+    "delivery-boxes": "Safe Delivery Boxes",
+    "IF_0102_WMS": "Security Lights",
+    "safe-return-routes": "Safe Return Routes",
+    "safe-stores": "Women's Safe Shelter",
+    "IF_0023_WMS": "CPTED Zone",
+    "IF_0036_WMS": "Security Facilities",
+    "IF_0032_WMS": "Emergency Bell"
+  }
+}

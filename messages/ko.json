@@ -1,0 +1,37 @@
+{
+  "metadata": {
+    "title": "여성 안심지도",
+    "description": "전국 여성 안전 정보 지도"
+  },
+  "header": {
+    "title": "여성 안심지도",
+    "subtitle": "전국 여성 안전 정보 지도"
+  },
+  "panel": {
+    "title": "레이어 필터",
+    "subtitle": "지도에 표시할 정보를 선택하세요",
+    "selected": "선택됨:"
+  },
+  "categories": {
+    "crime-zone": "범죄주의구간",
+    "crime-night": "여성밤길치안안전",
+    "security-infra": "치안시설",
+    "security-service": "치안서비스"
+  },
+  "layers": {
+    "IF_0085_WMS": "성폭력",
+    "IF_0083_WMS": "폭력",
+    "IF_0079_WMS": "성폭력",
+    "IF_0078_WMS": "폭력",
+    "cctv": "CCTV",
+    "smart-street-lights": "스마트 가로등",
+    "emergency-bells": "비상벨",
+    "delivery-boxes": "안심택배함",
+    "IF_0102_WMS": "보안등",
+    "safe-return-routes": "안심귀갓길",
+    "safe-stores": "여성안심지킴이집",
+    "IF_0023_WMS": "CPTED 구역",
+    "IF_0036_WMS": "치안시설",
+    "IF_0032_WMS": "안전비상벨"
+  }
+}

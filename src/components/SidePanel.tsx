@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useLayerStore } from "@/store/useLayerStore";
 import { LAYER_CATEGORIES } from "@/features/map/config/layersConfig";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 export const CATEGORY_COLORS: Record<string, string> = {
   "crime-zone": "#dc2626",
@@ -16,6 +17,9 @@ export default function SidePanel() {
   const toggleLayer = useLayerStore((state) => state.toggleLayer);
   const selectExclusively = useLayerStore((state) => state.selectExclusively);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+  const tPanel = useTranslations("panel");
+  const tCategories = useTranslations("categories");
+  const tLayers = useTranslations("layers");
 
   const selectedCategory = LAYER_CATEGORIES.find((c) => c.id === selectedCategoryId);
 
@@ -26,7 +30,7 @@ export default function SidePanel() {
         {/* Active filters bar */}
         {visibleLayers.length > 0 && (
           <div className="flex items-center gap-2 px-3 py-2 border-b overflow-x-auto bg-gray-50">
-            <span className="text-xs text-gray-400 whitespace-nowrap">선택됨:</span>
+            <span className="text-xs text-gray-400 whitespace-nowrap">{tPanel("selected")}</span>
             {LAYER_CATEGORIES.flatMap((c) => c.layers)
               .filter((l) => visibleLayers.includes(l.id))
               .map((layer) => (
@@ -35,7 +39,7 @@ export default function SidePanel() {
                   onClick={() => toggleLayer(layer.id)}
                   className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-gray-800 text-white whitespace-nowrap"
                 >
-                  {layer.name} ×
+                  {tLayers(layer.id)} ×
                 </button>
               ))}
           </div>
@@ -61,7 +65,7 @@ export default function SidePanel() {
                   className="text-[10px] text-center leading-tight font-semibold w-full break-keep px-1"
                   style={{ color: isSelected ? color : "#6b7280" }}
                 >
-                  {category.name}
+                  {tCategories(category.id)}
                 </span>
               </button>
             );
@@ -93,7 +97,7 @@ export default function SidePanel() {
                   {"icon" in layer && layer.icon && (
                     <Image src={layer.icon} alt="" width={14} height={14} />
                   )}
-                  {layer.name}
+                  {tLayers(layer.id)}
                 </button>
               );
             })}
@@ -104,8 +108,8 @@ export default function SidePanel() {
       {/* Desktop */}
       <div className="hidden md:block h-full">
         <div className="px-4 py-5 border-b">
-          <h1 className="text-sm font-semibold text-gray-800">레이어 필터</h1>
-          <p className="text-[11px] text-gray-400 mt-0.5">지도에 표시할 정보를 선택하세요</p>
+          <h1 className="text-sm font-semibold text-gray-800">{tPanel("title")}</h1>
+          <p className="text-[11px] text-gray-400 mt-0.5">{tPanel("subtitle")}</p>
         </div>
 
         {LAYER_CATEGORIES.map((category) => {
@@ -126,7 +130,7 @@ export default function SidePanel() {
                   <Image src={category.icon} alt="" width={22} height={22} />
                 )}
                 <h2 className="text-sm font-extrabold flex-1" style={{ color }}>
-                  {category.name}
+                  {tCategories(category.id)}
                 </h2>
                 {activeCount > 0 && (
                   <span
@@ -175,7 +179,7 @@ export default function SidePanel() {
                           style={active ? { filter: "brightness(0) invert(1)" } : {}}
                         />
                       )}
-                      {layer.name}
+                      {tLayers(layer.id)}
                     </button>
                   );
                 })}

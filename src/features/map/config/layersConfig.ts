@@ -69,7 +69,6 @@ export const BASE_LAYERS = [
 
 export const WMS_LAYERS = BASE_LAYERS.map((layer) => ({
   ...layer,
-  // url: `https://www.safemap.go.kr/openapi2/${layer.id}?serviceKey=${safemapKey}`,
   url: `/api/tiles/${layer.id}`,
 }));
 
@@ -119,7 +118,12 @@ export const LAYER_CATEGORIES = [
         type: "point",
         icon: "/icon-delivery-box.png",
       },
-      { id: "IF_0102_WMS", name: "보안등", type: "wms", icon: "/icon-security-light.png" },
+      {
+        id: "IF_0102_WMS",
+        name: "보안등",
+        type: "wms",
+        icon: "/icon-security-light.png",
+      },
     ],
   },
   {

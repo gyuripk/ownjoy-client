@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { getLocale } from "next-intl/server";
 import "./globals.css";
 
 const pretendard = localFont({
@@ -9,22 +9,16 @@ const pretendard = localFont({
   variable: "--font-pretendard",
 });
 
-export const metadata: Metadata = {
-  title: "여성 안심지도",
-  description: "전국 여성 안전 정보 지도",
-  icons: {
-    icon: "/icon-handshake.png",
-  },
-};
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  const locale = await getLocale();
   return (
     <html
-      lang="ko"
+      lang={locale}
       suppressHydrationWarning
       className={`${pretendard.variable} h-full antialiased`}
     >
