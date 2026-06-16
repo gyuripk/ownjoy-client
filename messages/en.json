@@ -3,6 +3,10 @@
     "title": "Women's Safety Map",
     "description": "National Women's Safety Information Map"
   },
+  "search": {
+    "placeholder": "Search address",
+    "noResults": "No results found"
+  },
   "header": {
     "title": "Women's Safety Map",
     "subtitle": "National Women's Safety Info"

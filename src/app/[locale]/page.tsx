@@ -13,6 +13,8 @@ import { LAYER_CATEGORIES } from "@/features/map/config/layersConfig";
 import { CATEGORY_COLORS } from "@/components/SidePanel";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
+import SearchBar from "@/features/map/components/SearchBar";
+import { useMapStore } from "@/store/useMapStore";
 
 const Map = dynamic(() => import("../../features/map/components/Map"), {
   ssr: false,
@@ -23,12 +25,16 @@ export default function Home() {
   const [isPanelOpen, setIsPanelOpen] = useState(true);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const t = useTranslations("panel");
+  const zoomIn = useMapStore((s) => s.zoomIn);
+  const zoomOut = useMapStore((s) => s.zoomOut);
 
   return (
     <div className="h-screen flex flex-col">
       <Header />
 
-      <main className="flex-1 relative">
+      <main
+        className="flex-1 relative"
+      >
         <Map />
 
         {/* Desktop: floating left panel */}
@@ -43,7 +49,7 @@ export default function Home() {
           ) : (
             /* Collapsed icon strip */
             <div className="flex flex-col items-center pt-4 gap-3 w-12">
-              {LAYER_CATEGORIES.map((cat) => {
+              {LAYER_CATEGORIES.map((cat, i) => {
                 const color = CATEGORY_COLORS[cat.id];
                 return (
                   <button
@@ -63,6 +69,7 @@ export default function Home() {
                         alt={cat.name}
                         width={22}
                         height={22}
+                        className={i === 0 ? "-mt-1.25 ml-0.5" : undefined}
                       />
                     )}
                   </button>
@@ -70,6 +77,39 @@ export default function Home() {
               })}
             </div>
           )}
+        </div>
+
+        {/* Search bar: desktop tracks panel edge, mobile full-width at top */}
+        <div
+          className="hidden md:block absolute top-3 z-1000 w-[clamp(18rem,35vw,28rem)] transition-all duration-300"
+          style={{
+            left: isPanelOpen
+              ? "calc(18rem + 0.75rem)"
+              : "calc(3rem + 0.75rem)",
+          }}
+        >
+          <SearchBar />
+        </div>
+        <div className="md:hidden absolute top-3 left-3 right-3 z-1000">
+          <SearchBar />
+        </div>
+
+        {/* Desktop zoom */}
+        <div className="hidden md:flex absolute right-3 bottom-3 z-1000 flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
+          <button
+            onClick={() => zoomIn?.()}
+            className="flex items-center justify-center w-8 h-8 text-gray-600 hover:bg-gray-50 border-b border-gray-200 text-xl font-light"
+            aria-label="Zoom in"
+          >
+            +
+          </button>
+          <button
+            onClick={() => zoomOut?.()}
+            className="flex items-center justify-center w-8 h-8 text-gray-600 hover:bg-gray-50 text-xl font-light"
+            aria-label="Zoom out"
+          >
+            −
+          </button>
         </div>
 
         {/* Desktop: toggle button */}
@@ -101,6 +141,20 @@ export default function Home() {
             : "translateY(calc(100% - 5rem))",
         }}
       >
+        {/* Zoom buttons: absolute child of panel — moves with panel transform automatically */}
+        <div className="absolute -top-18 right-3 flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
+          <button
+            onClick={() => zoomIn?.()}
+            className="flex items-center justify-center w-8 h-8 text-gray-600 hover:bg-gray-50 border-b border-gray-200 text-xl font-light"
+            aria-label="Zoom in"
+          >+</button>
+          <button
+            onClick={() => zoomOut?.()}
+            className="flex items-center justify-center w-8 h-8 text-gray-600 hover:bg-gray-50 text-xl font-light"
+            aria-label="Zoom out"
+          >−</button>
+        </div>
+
         {/* Handle bar — always visible as peek */}
         <div
           className="flex items-center gap-3 px-5 h-20 cursor-pointer border-b border-gray-100"
