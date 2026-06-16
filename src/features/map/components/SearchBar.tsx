@@ -37,12 +37,19 @@ export default function SearchBar() {
   const [results, setResults] = useState<JusoAddress[]>([]);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const [noResults, setNoResults] = useState(false);
+  const [apiMessage, setApiMessage] = useState<string | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const fetchResults = async (value: string): Promise<JusoAddress[]> => {
     const res = await fetch(
       `/api/geocode?q=${encodeURIComponent(value.trim())}&lang=${locale}`
     );
+    if (res.status === 422) {
+      const body = await res.json();
+      setApiMessage(body.message ?? null);
+      return [];
+    }
+    setApiMessage(null);
     return res.json();
   };
 
@@ -50,6 +57,7 @@ export default function SearchBar() {
     setQuery(value);
     setHighlightedIndex(-1);
     setNoResults(false);
+    setApiMessage(null);
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
     if (!value.trim()) {
@@ -58,11 +66,16 @@ export default function SearchBar() {
       return;
     }
 
+    if (value.trim().length === 1 && locale === "ko") {
+      setApiMessage("검색어는 두 글자 이상 입력해 주세요");
+      setResults([]);
+      return;
+    }
+
     const delay = locale === "en" ? 300 : 250;
     debounceRef.current = setTimeout(async () => {
       const data = await fetchResults(value);
       setResults(data);
-      // Don't show "no results" during typing — only on explicit search
     }, delay);
   };
 
@@ -100,6 +113,10 @@ export default function SearchBar() {
 
   const handleSearch = async () => {
     if (!query.trim()) return;
+    if (query.trim().length === 1 && locale === "ko") {
+      setApiMessage("검색어는 두 글자 이상 입력해 주세요");
+      return;
+    }
     const target = highlightedIndex >= 0 ? results[highlightedIndex] : results[0];
     if (target) {
       handleSelect(target);
@@ -136,7 +153,7 @@ export default function SearchBar() {
     setSelectedPlace(null);
   };
 
-  const showDropdown = results.length > 0 || noResults;
+  const showDropdown = results.length > 0 || noResults || !!apiMessage;
 
   return (
     <div className="w-full">
@@ -198,7 +215,7 @@ export default function SearchBar() {
             })
           ) : (
             <li className="px-4 py-3 text-sm text-gray-400 text-center">
-              {t("noResults")}
+              {apiMessage ?? t("noResults")}
             </li>
           )}
         </ul>

@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import {
   MapContainer,
-  ZoomControl,
   useMap,
   Marker,
   GeoJSON,
@@ -31,15 +30,15 @@ function MapController() {
   const map = useMap();
   const setFlyTo = useMapStore((s) => s.setFlyTo);
   const setFitBounds = useMapStore((s) => s.setFitBounds);
+  const setZoomIn = useMapStore((s) => s.setZoomIn);
+  const setZoomOut = useMapStore((s) => s.setZoomOut);
 
   useEffect(() => {
-    setFlyTo((lat, lng) => {
-      map.flyTo([lat, lng], 16, { duration: 1 });
-    });
-    setFitBounds((bounds) => {
-      map.fitBounds(bounds, { padding: [30, 30], animate: true });
-    });
-  }, [map, setFlyTo, setFitBounds]);
+    setFlyTo((lat, lng) => { map.flyTo([lat, lng], 16, { duration: 1 }); });
+    setFitBounds((bounds) => { map.fitBounds(bounds, { padding: [30, 30], animate: true }); });
+    setZoomIn(() => { map.zoomIn(); });
+    setZoomOut(() => { map.zoomOut(); });
+  }, [map, setFlyTo, setFitBounds, setZoomIn, setZoomOut]);
 
   return null;
 }
@@ -85,8 +84,6 @@ export default function Map() {
     >
       <MapController />
       <SelectedPlaceLayer />
-      {/* zoom controls moved to topright to avoid overlapping the side panel */}
-      <ZoomControl position="topright" />
       <VectorTileLayer />
       <WmsLayer />
       {visibleLayers.includes("safe-return-routes") && <SafeReturnRouteLayer />}

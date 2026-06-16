@@ -65,8 +65,11 @@ export async function GET(req: Request) {
     `https://business.juso.go.kr/addrlink/addrLinkApi.do?${params}`
   );
   const raw = await res.json();
-  if (raw?.results?.common?.errorCode !== "0") {
-    console.error("Juso API error:", raw?.results?.common);
+  const { errorCode, errorMessage } = raw?.results?.common ?? {};
+  if (errorCode !== "0") {
+    if (errorCode === "E0011") {
+      return Response.json({ message: errorMessage }, { status: 422 });
+    }
     return Response.json([]);
   }
   return Response.json(raw.results.juso ?? []);
