@@ -2,6 +2,7 @@
 
 # IDE
 .vscode/
+.claude/
 
 # dependencies
 /node_modules

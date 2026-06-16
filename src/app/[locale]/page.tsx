@@ -1,14 +1,20 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import { PanelLeftClose, PanelLeftOpen, SlidersHorizontal, ChevronUp } from "lucide-react";
+import {
+  PanelLeftClose,
+  PanelLeftOpen,
+  SlidersHorizontal,
+  ChevronUp,
+} from "lucide-react";
 import Header from "@/components/Header";
 import SidePanel from "@/components/SidePanel";
 import { LAYER_CATEGORIES } from "@/features/map/config/layersConfig";
 import { CATEGORY_COLORS } from "@/components/SidePanel";
 import dynamic from "next/dynamic";
+import { useTranslations } from "next-intl";
 
-const Map = dynamic(() => import("../features/map/components/Map"), {
+const Map = dynamic(() => import("../../features/map/components/Map"), {
   ssr: false,
   loading: () => <div>Loading the map..</div>,
 });
@@ -16,6 +22,7 @@ const Map = dynamic(() => import("../features/map/components/Map"), {
 export default function Home() {
   const [isPanelOpen, setIsPanelOpen] = useState(true);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+  const t = useTranslations("panel");
 
   return (
     <div className="h-screen flex flex-col">
@@ -51,7 +58,12 @@ export default function Home() {
                     }}
                   >
                     {cat.icon && (
-                      <Image src={cat.icon} alt={cat.name} width={22} height={22} />
+                      <Image
+                        src={cat.icon}
+                        alt={cat.name}
+                        width={22}
+                        height={22}
+                      />
                     )}
                   </button>
                 );
@@ -64,10 +76,18 @@ export default function Home() {
         <button
           onClick={() => setIsPanelOpen(!isPanelOpen)}
           className="hidden md:flex absolute top-1/2 -translate-y-1/2 z-999 items-center justify-center w-9 h-9 rounded-full bg-white border border-gray-200 shadow-lg transition-all duration-300 hover:bg-gray-50 hover:shadow-xl text-gray-500 hover:text-gray-800"
-          style={{ left: isPanelOpen ? "calc(18rem - 1.125rem)" : "calc(3rem - 1.125rem)" }}
+          style={{
+            left: isPanelOpen
+              ? "calc(18rem - 1.125rem)"
+              : "calc(3rem - 1.125rem)",
+          }}
           aria-label={isPanelOpen ? "패널 닫기" : "패널 열기"}
         >
-          {isPanelOpen ? <PanelLeftClose size={16} /> : <PanelLeftOpen size={16} />}
+          {isPanelOpen ? (
+            <PanelLeftClose size={16} />
+          ) : (
+            <PanelLeftOpen size={16} />
+          )}
         </button>
       </main>
 
@@ -76,7 +96,9 @@ export default function Home() {
         className="md:hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-2xl z-1001 transition-transform duration-300"
         style={{
           maxHeight: "72vh",
-          transform: isMobileDrawerOpen ? "translateY(0)" : "translateY(calc(100% - 5rem))",
+          transform: isMobileDrawerOpen
+            ? "translateY(0)"
+            : "translateY(calc(100% - 5rem))",
         }}
       >
         {/* Handle bar — always visible as peek */}
@@ -89,8 +111,10 @@ export default function Home() {
           </div>
           <SlidersHorizontal size={17} className="text-gray-400 mt-2" />
           <div className="flex-1 mt-2">
-            <p className="text-sm font-bold text-gray-800 leading-tight">레이어 필터</p>
-            <p className="text-xs text-gray-400 mt-0.5">지도에 표시할 정보를 선택하세요</p>
+            <p className="text-sm font-bold text-gray-800 leading-tight">
+              {t("title")}
+            </p>
+            <p className="text-xs text-gray-400 mt-0.5">{t("subtitle")}</p>
           </div>
           <ChevronUp
             size={18}
@@ -98,7 +122,10 @@ export default function Home() {
           />
         </div>
         {/* Scrollable content */}
-        <div className="overflow-y-auto pb-2" style={{ maxHeight: "calc(72vh - 5rem)" }}>
+        <div
+          className="overflow-y-auto pb-2"
+          style={{ maxHeight: "calc(72vh - 5rem)" }}
+        >
           <SidePanel />
         </div>
       </div>

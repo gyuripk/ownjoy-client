@@ -4,7 +4,7 @@ import { MapContainer, ZoomControl } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import VectorTileLayer from "./layers/VectorTileLayer";
 import WmsLayer from "./layers/WmsLayer";
-import SafeReturnRouteLayer from "./layers/SafetyReturnRouterLayer";
+import SafeReturnRouteLayer from "./layers/SafeReturnRouteLayer";
 import DeliveryBoxesLayer from "./layers/DeliveryBoxesLayer";
 import EmergencyBellLayer from "./layers/EmergencyBellLayer";
 import SafeStoresLayer from "./layers/SafeStoresLayer";
@@ -32,7 +32,9 @@ export default function Map() {
       {visibleLayers.includes("delivery-boxes") && <DeliveryBoxesLayer />}
       {visibleLayers.includes("emergency-bells") && <EmergencyBellLayer />}
       {visibleLayers.includes("safe-stores") && <SafeStoresLayer />}
-      {visibleLayers.includes("smart-street-lights") && <SmartStreetLightsLayer />}
+      {visibleLayers.includes("smart-street-lights") && (
+        <SmartStreetLightsLayer />
+      )}
       {visibleLayers.includes("cctv") && <CctvLayer />}
     </MapContainer>
   );
