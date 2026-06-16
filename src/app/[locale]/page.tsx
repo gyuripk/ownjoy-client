@@ -94,31 +94,6 @@ export default function Home() {
           <SearchBar />
         </div>
 
-        {/* Mobile zoom: tracks panel open/collapsed */}
-        <div
-          className="md:hidden absolute right-3 z-1000 flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg transition-all duration-300"
-          style={{
-            bottom: isMobileDrawerOpen
-              ? "calc(72vh + 0.75rem)"
-              : "calc(5rem + 0.75rem)",
-          }}
-        >
-          <button
-            onClick={() => zoomIn?.()}
-            className="flex items-center justify-center w-8 h-8 text-gray-600 hover:bg-gray-50 border-b border-gray-200 text-xl font-light"
-            aria-label="Zoom in"
-          >
-            +
-          </button>
-          <button
-            onClick={() => zoomOut?.()}
-            className="flex items-center justify-center w-8 h-8 text-gray-600 hover:bg-gray-50 text-xl font-light"
-            aria-label="Zoom out"
-          >
-            −
-          </button>
-        </div>
-
         {/* Desktop zoom */}
         <div className="hidden md:flex absolute right-3 bottom-3 z-1000 flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
           <button
@@ -166,6 +141,20 @@ export default function Home() {
             : "translateY(calc(100% - 5rem))",
         }}
       >
+        {/* Zoom buttons: absolute child of panel — moves with panel transform automatically */}
+        <div className="absolute -top-18 right-3 flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
+          <button
+            onClick={() => zoomIn?.()}
+            className="flex items-center justify-center w-8 h-8 text-gray-600 hover:bg-gray-50 border-b border-gray-200 text-xl font-light"
+            aria-label="Zoom in"
+          >+</button>
+          <button
+            onClick={() => zoomOut?.()}
+            className="flex items-center justify-center w-8 h-8 text-gray-600 hover:bg-gray-50 text-xl font-light"
+            aria-label="Zoom out"
+          >−</button>
+        </div>
+
         {/* Handle bar — always visible as peek */}
         <div
           className="flex items-center gap-3 px-5 h-20 cursor-pointer border-b border-gray-100"
