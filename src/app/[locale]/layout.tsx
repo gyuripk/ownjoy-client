@@ -33,6 +33,11 @@ export async function generateMetadata({
       icon: "/icon-handshake.png",
       apple: "/icon-handshake.png",
     },
+    verification: {
+      other: {
+        "naver-site-verification": "38e6fb0ed95d10968a8f0218c295e38d1a847ef0",
+      },
+    },
   };
 }
 
