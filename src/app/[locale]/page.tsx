@@ -14,6 +14,7 @@ import { CATEGORY_COLORS } from "@/components/SidePanel";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import SearchBar from "@/features/map/components/SearchBar";
+import Legend from "@/features/map/components/Legend";
 import { useMapStore } from "@/store/useMapStore";
 
 const Map = dynamic(() => import("../../features/map/components/Map"), {
@@ -94,22 +95,25 @@ export default function Home() {
           <SearchBar />
         </div>
 
-        {/* Desktop zoom */}
-        <div className="hidden md:flex absolute right-3 bottom-3 z-1000 flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
-          <button
-            onClick={() => zoomIn?.()}
-            className="flex items-center justify-center w-8 h-8 text-gray-600 hover:bg-gray-50 border-b border-gray-200 text-xl font-light"
-            aria-label="Zoom in"
-          >
-            +
-          </button>
-          <button
-            onClick={() => zoomOut?.()}
-            className="flex items-center justify-center w-8 h-8 text-gray-600 hover:bg-gray-50 text-xl font-light"
-            aria-label="Zoom out"
-          >
-            −
-          </button>
+        {/* Desktop: legend + zoom as a pair */}
+        <div className="hidden md:flex absolute right-3 bottom-3 z-1000 items-end gap-2">
+          <Legend align="right" />
+          <div className="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
+            <button
+              onClick={() => zoomIn?.()}
+              className="flex items-center justify-center w-8 h-8 text-gray-600 hover:bg-gray-50 border-b border-gray-200 text-xl font-light"
+              aria-label="Zoom in"
+            >
+              +
+            </button>
+            <button
+              onClick={() => zoomOut?.()}
+              className="flex items-center justify-center w-8 h-8 text-gray-600 hover:bg-gray-50 text-xl font-light"
+              aria-label="Zoom out"
+            >
+              −
+            </button>
+          </div>
         </div>
 
         {/* Desktop: toggle button */}
@@ -141,7 +145,10 @@ export default function Home() {
             : "translateY(calc(100% - 5rem))",
         }}
       >
-        {/* Zoom buttons: absolute child of panel — moves with panel transform automatically */}
+        {/* Mobile: legend and zoom both move with drawer, independently anchored */}
+        <div className="absolute -top-10 left-3">
+          <Legend align="left" />
+        </div>
         <div className="absolute -top-18 right-3 flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
           <button
             onClick={() => zoomIn?.()}
