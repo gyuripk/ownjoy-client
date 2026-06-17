@@ -1,14 +1,14 @@
 {
   "metadata": {
-    "title": "여성 안심지도",
-    "description": "전국 여성 안전 정보 지도"
+    "title": "전국 여성 안심 지도",
+    "description": "전국 여성 안전 정보를 한눈에 — CCTV, 비상벨, 안심귀갓길, 범죄주의구간을 지도에서 확인하세요."
   },
   "search": {
     "placeholder": "주소 검색",
     "noResults": "검색 결과가 없습니다"
   },
   "header": {
-    "title": "여성 안심지도",
+    "title": "전국 여성 안심 지도",
     "subtitle": "전국 여성 안전 정보 지도"
   },
   "panel": {
