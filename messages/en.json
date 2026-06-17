@@ -22,6 +22,28 @@
     "security-infra": "Security Facilities",
     "security-service": "Security Services"
   },
+  "legend": {
+    "title": "Legend",
+    "low": "Low",
+    "high": "High",
+    "noSafetyLabel": "No safety infra",
+    "layerInfo": {
+      "IF_0085_WMS": "• Risk map based on sexual violence incidents over the past year\n• Higher risk areas appear in darker colors (10 levels)",
+      "IF_0083_WMS": "• Risk map based on violence incidents over the past year\n• Higher risk areas appear in darker colors (10 levels)",
+      "IF_0079_WMS": "• Risk map based on nighttime (8pm–midnight) sexual violence incidents over the past 3 years\n• Higher risk areas appear in darker colors (10 levels)\n• Gray shaded areas have no nearby safety facilities (CCTV, street lights, etc.). Take extra caution in these areas",
+      "IF_0078_WMS": "• Risk map based on nighttime (8pm–midnight) violence incidents over the past 3 years\n• Higher risk areas appear in darker colors (10 levels)\n• Gray shaded areas have no nearby safety facilities (CCTV, street lights, etc.). Take extra caution in these areas",
+      "cctv": "• Locations of outdoor CCTV cameras installed for public safety\n• Includes number of cameras and coverage direction per location",
+      "smart-street-lights": "• Smart street lights equipped with CCTV and various sensors\n• Some support emergency reporting features\n• May include WiFi and beacon connectivity",
+      "emergency-bells": "• Emergency bell locations in parks, restrooms, parking lots, and streets\n• Pressing the button triggers an alarm. Some bells automatically alert police or security, and some support two-way voice calls",
+      "delivery-boxes": "• Secure unmanned parcel lockers in public spaces — receive deliveries safely on your own\n• Operating hours may vary by day (weekday, Saturday, holiday)",
+      "IF_0102_WMS": "• Security light locations managed by local governments\n• Helps identify well-lit areas for safer nighttime walking",
+      "safe-return-routes": "• Designated safe walking routes home in Seoul (362 routes total)\n• Currently available for Seoul only",
+      "safe-stores": "• 24-hour convenience stores designated as safe havens\n• If you're in danger, go inside and press the emergency bell — police will respond immediately",
+      "IF_0023_WMS": "• Areas designed to reduce crime through better lighting, visibility, and controlled access\n• These zones are relatively safer environments",
+      "IF_0036_WMS": "• Locations of police stations and substations\n• Use this layer to find the nearest police facility in an emergency",
+      "IF_0032_WMS": "• Emergency bell locations in parks, restrooms, parking lots, and streets\n• Does not include convenience store bells or fire alarms\n• Pressing the button triggers an alarm. Some bells automatically alert police or security, and some support two-way voice calls"
+    }
+  },
   "layers": {
     "IF_0085_WMS": "Sexual Violence",
     "IF_0083_WMS": "Violence",
@@ -33,7 +55,7 @@
     "delivery-boxes": "Safe Delivery Boxes",
     "IF_0102_WMS": "Security Lights",
     "safe-return-routes": "Safe Return Routes",
-    "safe-stores": "Women's Safe Shelter",
+    "safe-stores": "Safe Haven for Women",
     "IF_0023_WMS": "CPTED Zone",
     "IF_0036_WMS": "Security Facilities",
     "IF_0032_WMS": "Emergency Bell"
