@@ -5,6 +5,14 @@ type NominatimResult = {
   address: Record<string, string>;
 };
 
+type KakaoDocument = {
+  place_name: string;
+  road_address_name: string;
+  address_name: string;
+  x: string;
+  y: string;
+};
+
 async function nominatimSearch(keyword: string): Promise<object[]> {
   const params = new URLSearchParams({
     q: keyword,
@@ -35,42 +43,42 @@ async function nominatimSearch(keyword: string): Promise<object[]> {
   }));
 }
 
+async function kakaoSearch(keyword: string): Promise<object[]> {
+  const apiKey = process.env.KAKAO_API_KEY;
+  if (!apiKey) return [];
+
+  const params = new URLSearchParams({ query: keyword, size: "5" });
+  const res = await fetch(
+    `https://dapi.kakao.com/v2/local/search/keyword.json?${params}`,
+    { headers: { Authorization: `KakaoAK ${apiKey}` } }
+  );
+  if (!res.ok) return [];
+  const data = await res.json();
+
+  return (data.documents ?? []).map((d: KakaoDocument) => ({
+    roadAddr: d.road_address_name || d.address_name,
+    jibunAddr: d.address_name,
+    engAddr: d.road_address_name,
+    bdNm: d.place_name,
+    admCd: "",
+    rnMgtSn: "",
+    udrtYn: "0",
+    buldMnnm: 0,
+    buldSlno: 0,
+    _lat: d.y,
+    _lng: d.x,
+  }));
+}
+
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const keyword = url.searchParams.get("q")?.trim();
   const lang = url.searchParams.get("lang") ?? "ko";
   if (!keyword) return Response.json([]);
 
-  const isEn = lang === "en";
-
-  if (isEn) {
+  if (lang === "en") {
     return Response.json(await nominatimSearch(keyword));
   }
 
-  // Korean
-  const confmKey = process.env.JUSO_KO_API_KEY;
-  if (!confmKey) {
-    console.error("JUSO_KO_API_KEY is not set");
-    return Response.json([]);
-  }
-  const params = new URLSearchParams({
-    currentPage: "1",
-    countPerPage: "5",
-    keyword,
-    confmKey,
-    resultType: "json",
-    hstryYn: "N",
-  });
-  const res = await fetch(
-    `https://business.juso.go.kr/addrlink/addrLinkApi.do?${params}`
-  );
-  const raw = await res.json();
-  const { errorCode, errorMessage } = raw?.results?.common ?? {};
-  if (errorCode !== "0") {
-    if (errorCode === "E0011") {
-      return Response.json({ message: errorMessage }, { status: 422 });
-    }
-    return Response.json([]);
-  }
-  return Response.json(raw.results.juso ?? []);
+  return Response.json(await kakaoSearch(keyword));
 }
