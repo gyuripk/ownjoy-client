@@ -5,7 +5,15 @@ type NominatimResult = {
   address: Record<string, string>;
 };
 
-type KakaoDocument = {
+type KakaoAddressDocument = {
+  address_name: string;
+  x: string;
+  y: string;
+  address: { address_name: string } | null;
+  road_address: { address_name: string; building_name: string } | null;
+};
+
+type KakaoKeywordDocument = {
   place_name: string;
   road_address_name: string;
   address_name: string;
@@ -47,15 +55,42 @@ async function kakaoSearch(keyword: string): Promise<object[]> {
   const apiKey = process.env.KAKAO_API_KEY;
   if (!apiKey) return [];
 
+  const headers = { Authorization: `KakaoAK ${apiKey}` };
   const params = new URLSearchParams({ query: keyword, size: "5" });
-  const res = await fetch(
-    `https://dapi.kakao.com/v2/local/search/keyword.json?${params}`,
-    { headers: { Authorization: `KakaoAK ${apiKey}` } }
-  );
-  if (!res.ok) return [];
-  const data = await res.json();
 
-  return (data.documents ?? []).map((d: KakaoDocument) => ({
+  // Try address search first
+  const addrRes = await fetch(
+    `https://dapi.kakao.com/v2/local/search/address.json?${params}`,
+    { headers }
+  );
+  if (addrRes.ok) {
+    const addrData = await addrRes.json();
+    const docs: KakaoAddressDocument[] = addrData.documents ?? [];
+    if (docs.length > 0) {
+      return docs.map((d) => ({
+        roadAddr: d.road_address?.address_name || d.address_name,
+        jibunAddr: d.address?.address_name || d.address_name,
+        engAddr: d.road_address?.address_name || d.address_name,
+        bdNm: d.road_address?.building_name || "",
+        admCd: "",
+        rnMgtSn: "",
+        udrtYn: "0",
+        buldMnnm: 0,
+        buldSlno: 0,
+        _lat: d.y,
+        _lng: d.x,
+      }));
+    }
+  }
+
+  // Fallback: keyword search (place names, subway stations, etc.)
+  const kwRes = await fetch(
+    `https://dapi.kakao.com/v2/local/search/keyword.json?${params}`,
+    { headers }
+  );
+  if (!kwRes.ok) return [];
+  const kwData = await kwRes.json();
+  return (kwData.documents ?? []).map((d: KakaoKeywordDocument) => ({
     roadAddr: d.road_address_name || d.address_name,
     jibunAddr: d.address_name,
     engAddr: d.road_address_name,
