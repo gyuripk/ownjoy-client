@@ -22,6 +22,13 @@
     "security-infra": "치안시설",
     "security-service": "치안서비스"
   },
+  "location": {
+    "unsupported": "위치 서비스를 지원하지 않는 브라우저입니다.",
+    "denied": "위치 권한이 거부되었습니다. 브라우저 설정에서 허용해주세요.",
+    "unavailable": "위치를 가져올 수 없습니다.",
+    "outsideKorea": "한국 내 위치만 지원합니다.",
+    "current": "현재 지역:"
+  },
   "legend": {
     "title": "범례",
     "low": "낮음",

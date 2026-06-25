@@ -25,6 +25,33 @@
 .police-booth-marker img    { width: 16px !important; height: 16px !important; }
 
 
+.current-location-dot {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #3b82f6;
+  border: 2.5px solid white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.current-location-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  background: rgba(59, 130, 246, 0.4);
+  border-radius: 50%;
+  animation: location-pulse 2s ease-out infinite;
+}
+
+@keyframes location-pulse {
+  0%   { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(3.5); opacity: 0; }
+}
+
 .cluster {
   border-radius: 50%;
   display: flex;

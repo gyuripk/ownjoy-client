@@ -15,6 +15,7 @@ import CctvLayer from "./layers/CctvLayer";
 import { useLayerStore } from "@/store/useLayerStore";
 import { useMapStore } from "@/store/useMapStore";
 import PoliceFacilitiesLayer from "./layers/PoliceFacilitiesLayer";
+import CurrentLocationLayer from "./layers/CurrentLocationLayer";
 
 const selectedMarkerIcon = L.icon({
   iconUrl: "/icon-location.png",
@@ -99,6 +100,7 @@ export default function Map() {
       )}
       {visibleLayers.includes("cctv") && <CctvLayer />}
       {visibleLayers.includes("police-facilities") && <PoliceFacilitiesLayer />}
+      <CurrentLocationLayer />
     </MapContainer>
   );
 }
