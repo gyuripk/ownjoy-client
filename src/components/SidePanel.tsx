@@ -62,7 +62,7 @@ export default function SidePanel() {
               >
                 {category.icon && <Image src={category.icon} alt="" width={32} height={32} />}
                 <span
-                  className="text-[10px] text-center leading-tight font-semibold w-full break-keep px-1"
+                  className="text-xs text-center leading-tight font-semibold w-full break-keep px-1"
                   style={{ color: isSelected ? color : "#6b7280" }}
                 >
                   {tCategories(category.id)}
@@ -95,7 +95,7 @@ export default function SidePanel() {
                   }
                 >
                   {"icon" in layer && layer.icon && (
-                    <Image src={layer.icon} alt="" width={14} height={14} />
+                    <Image src={layer.icon} alt="" width={20} height={20} style={layer.id === "cctv" ? { marginTop: "-4px" } : {}} />
                   )}
                   {tLayers(layer.id)}
                 </button>
@@ -127,7 +127,7 @@ export default function SidePanel() {
                 style={{ borderLeft: `4px solid ${color}`, backgroundColor: `${color}0f` }}
               >
                 {category.icon && (
-                  <Image src={category.icon} alt="" width={22} height={22} />
+                  <Image src={category.icon} alt="" width={30} height={30} />
                 )}
                 <h2 className="text-sm font-extrabold flex-1" style={{ color }}>
                   {tCategories(category.id)}
@@ -174,9 +174,9 @@ export default function SidePanel() {
                         <Image
                           src={layer.icon}
                           alt=""
-                          width={13}
-                          height={13}
-                          style={active ? { filter: "brightness(0) invert(1)" } : {}}
+                          width={18}
+                          height={18}
+                          style={{ ...(active ? { filter: "brightness(0) invert(1)" } : {}), ...(layer.id === "cctv" ? { marginTop: "-3px" } : {}) }}
                         />
                       )}
                       {tLayers(layer.id)}

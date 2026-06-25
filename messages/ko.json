@@ -58,6 +58,10 @@
     "safe-stores": "여성안심지킴이집",
     "IF_0023_WMS": "CPTED 구역",
     "IF_0032_WMS": "안전비상벨",
-    "police-facilities": "경찰관서"
+    "police-facilities": "경찰관서",
+    "police-station-type": "경찰서",
+    "police-district-type": "지구대",
+    "police-sub-type": "파출소",
+    "police-booth-type": "치안센터"
   }
 }

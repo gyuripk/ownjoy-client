@@ -58,6 +58,10 @@
     "safe-stores": "Safe Haven for Women",
     "IF_0023_WMS": "CPTED Zone",
     "IF_0032_WMS": "Emergency Bell",
-    "police-facilities": "Police Facilities"
+    "police-facilities": "Police Facilities",
+    "police-station-type": "Police Station",
+    "police-district-type": "District Office",
+    "police-sub-type": "Substation",
+    "police-booth-type": "Security Booth"
   }
 }
