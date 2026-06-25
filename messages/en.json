@@ -40,8 +40,8 @@
       "safe-return-routes": "• Designated safe walking routes home in Seoul (362 routes total)\n• Currently available for Seoul only",
       "safe-stores": "• 24-hour convenience stores designated as safe havens\n• If you're in danger, go inside and press the emergency bell — police will respond immediately",
       "IF_0023_WMS": "• Areas designed to reduce crime through better lighting, visibility, and controlled access\n• These zones are relatively safer environments",
-      "IF_0036_WMS": "• Locations of police stations and substations\n• Use this layer to find the nearest police facility in an emergency",
-      "IF_0032_WMS": "• Emergency bell locations in parks, restrooms, parking lots, and streets\n• Does not include convenience store bells or fire alarms\n• Pressing the button triggers an alarm. Some bells automatically alert police or security, and some support two-way voice calls"
+      "IF_0032_WMS": "• Emergency bell locations in parks, restrooms, parking lots, and streets\n• Does not include convenience store bells or fire alarms\n• Pressing the button triggers an alarm. Some bells automatically alert police or security, and some support two-way voice calls",
+      "police-facilities": "• Locations of police stations, district offices, substations, and security booths nationwide (2,973 total)\n• Use this in an emergency to find the nearest police facility"
     }
   },
   "layers": {
@@ -57,7 +57,7 @@
     "safe-return-routes": "Safe Return Routes",
     "safe-stores": "Safe Haven for Women",
     "IF_0023_WMS": "CPTED Zone",
-    "IF_0036_WMS": "Security Facilities",
-    "IF_0032_WMS": "Emergency Bell"
+    "IF_0032_WMS": "Emergency Bell",
+    "police-facilities": "Police Facilities"
   }
 }

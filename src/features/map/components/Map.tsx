@@ -1,12 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import {
-  MapContainer,
-  useMap,
-  Marker,
-  GeoJSON,
-} from "react-leaflet";
+import { MapContainer, useMap, Marker, GeoJSON } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import VectorTileLayer from "./layers/VectorTileLayer";
@@ -19,6 +14,7 @@ import SmartStreetLightsLayer from "./layers/SmartStreetLightsLayer";
 import CctvLayer from "./layers/CctvLayer";
 import { useLayerStore } from "@/store/useLayerStore";
 import { useMapStore } from "@/store/useMapStore";
+import PoliceFacilitiesLayer from "./layers/PoliceFacilitiesLayer";
 
 const selectedMarkerIcon = L.icon({
   iconUrl: "/icon-location.png",
@@ -34,10 +30,18 @@ function MapController() {
   const setZoomOut = useMapStore((s) => s.setZoomOut);
 
   useEffect(() => {
-    setFlyTo((lat, lng) => { map.flyTo([lat, lng], 16, { duration: 1 }); });
-    setFitBounds((bounds) => { map.fitBounds(bounds, { padding: [30, 30], animate: true }); });
-    setZoomIn(() => { map.zoomIn(); });
-    setZoomOut(() => { map.zoomOut(); });
+    setFlyTo((lat, lng) => {
+      map.flyTo([lat, lng], 16, { duration: 1 });
+    });
+    setFitBounds((bounds) => {
+      map.fitBounds(bounds, { padding: [30, 30], animate: true });
+    });
+    setZoomIn(() => {
+      map.zoomIn();
+    });
+    setZoomOut(() => {
+      map.zoomOut();
+    });
   }, [map, setFlyTo, setFitBounds, setZoomIn, setZoomOut]);
 
   return null;
@@ -94,6 +98,7 @@ export default function Map() {
         <SmartStreetLightsLayer />
       )}
       {visibleLayers.includes("cctv") && <CctvLayer />}
+      {visibleLayers.includes("police-facilities") && <PoliceFacilitiesLayer />}
     </MapContainer>
   );
 }

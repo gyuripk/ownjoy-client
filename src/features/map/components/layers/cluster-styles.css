@@ -1,4 +1,5 @@
 .map-marker {
+  position: relative;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -14,6 +15,15 @@
 .delivery-marker { border: 3px solid #3182ce; }
 .store-marker    { border: 3px solid #38a169; }
 .light-marker    { border: 3px solid #d69e2e; }
+.police-station-marker  { border: 3px solid #0F2042; }
+.police-district-marker { border: 3px solid #1E40AF; width: 35px; height: 35px; }
+.police-sub-marker      { border: 3px solid #0A8491; width: 32px; height: 32px; }
+.police-booth-marker    { border: 3px solid #64748B; width: 32px; height: 32px; }
+
+.police-district-marker img { width: 22px !important; height: 22px !important; }
+.police-sub-marker img      { width: 20px !important; height: 20px !important; }
+.police-booth-marker img    { width: 20px !important; height: 20px !important; }
+
 
 .cluster {
   border-radius: 50%;
@@ -53,6 +63,12 @@
 
 .light-cluster {
   background: #d69e2e;
+  width: 36px;
+  height: 36px;
+}
+
+.police-cluster {
+  background: #2b6cb0;
   width: 36px;
   height: 36px;
 }

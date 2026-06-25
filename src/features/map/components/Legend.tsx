@@ -20,7 +20,7 @@ const LINE_LAYERS: Record<string, { color: string }> = {
   "safe-return-routes": { color: "#00c976" },
 };
 
-type LayerId = "IF_0085_WMS" | "IF_0083_WMS" | "IF_0079_WMS" | "IF_0078_WMS" | "cctv" | "smart-street-lights" | "emergency-bells" | "delivery-boxes" | "IF_0102_WMS" | "safe-return-routes" | "safe-stores" | "IF_0023_WMS" | "IF_0036_WMS" | "IF_0032_WMS";
+type LayerId = "IF_0085_WMS" | "IF_0083_WMS" | "IF_0079_WMS" | "IF_0078_WMS" | "cctv" | "smart-street-lights" | "emergency-bells" | "delivery-boxes" | "IF_0102_WMS" | "safe-return-routes" | "safe-stores" | "IF_0023_WMS" | "IF_0032_WMS" | "police-facilities";
 
 export default function Legend({ align = "right" }: { align?: "left" | "right" }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -159,6 +159,16 @@ export default function Legend({ align = "right" }: { align?: "left" | "right" }
                                 <Info size={12} />
                               </button>
                             </div>
+                            {"subItems" in layer && Array.isArray(layer.subItems) && (
+                              <div className="flex flex-row flex-wrap gap-x-3 gap-y-1">
+                                {(layer.subItems as { label: string; icon: string; color: string }[]).map((sub) => (
+                                  <div key={sub.label} className="flex items-center gap-1">
+                                    <Image src={sub.icon} alt="" width={12} height={12} />
+                                    <span className="text-[10px] text-gray-600">{sub.label}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
                             {isInfoOpen && (
                               <div className="text-[10px] text-gray-500 bg-white bg-opacity-70 rounded-md px-2 py-1.5 leading-relaxed border border-gray-100 whitespace-pre-line">
                                 {t(`layerInfo.${layer.id as LayerId}`)}
