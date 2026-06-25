@@ -22,6 +22,13 @@
     "security-infra": "Security Facilities",
     "security-service": "Security Services"
   },
+  "location": {
+    "unsupported": "Geolocation is not supported by your browser.",
+    "denied": "Location permission denied. Please allow it in your browser settings.",
+    "unavailable": "Unable to retrieve your location.",
+    "outsideKorea": "Location is outside Korea.",
+    "current": "Current area:"
+  },
   "legend": {
     "title": "Legend",
     "low": "Low",

@@ -6,13 +6,14 @@ import {
   PanelLeftOpen,
   SlidersHorizontal,
   ChevronUp,
+  LocateFixed,
 } from "lucide-react";
 import Header from "@/components/Header";
 import SidePanel from "@/components/SidePanel";
 import { LAYER_CATEGORIES } from "@/features/map/config/layersConfig";
 import { CATEGORY_COLORS } from "@/components/SidePanel";
 import dynamic from "next/dynamic";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import SearchBar from "@/features/map/components/SearchBar";
 import Legend from "@/features/map/components/Legend";
 import { useMapStore } from "@/store/useMapStore";
@@ -25,9 +26,62 @@ const Map = dynamic(() => import("../../features/map/components/Map"), {
 export default function Home() {
   const [isPanelOpen, setIsPanelOpen] = useState(true);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+  const [isLocating, setIsLocating] = useState(false);
+  const [locationError, setLocationError] = useState<string | null>(null);
+  const [currentAddress, setCurrentAddress] = useState<string | null>(null);
+  const locale = useLocale();
   const t = useTranslations("panel");
+  const tLoc = useTranslations("location");
   const zoomIn = useMapStore((s) => s.zoomIn);
   const zoomOut = useMapStore((s) => s.zoomOut);
+  const flyTo = useMapStore((s) => s.flyTo);
+  const setCurrentLocation = useMapStore((s) => s.setCurrentLocation);
+
+  const showError = (msg: string) => {
+    setLocationError(msg);
+    setTimeout(() => setLocationError(null), 3000);
+  };
+
+  const handleLocate = async () => {
+    if (!navigator.geolocation) {
+      showError(tLoc("unsupported"));
+      return;
+    }
+    if (navigator.permissions) {
+      const { state } = await navigator.permissions.query({ name: "geolocation" });
+      if (state === "denied") {
+        showError(tLoc("denied"));
+        return;
+      }
+    }
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude: lat, longitude: lng } = pos.coords;
+        if (lat < 33.0 || lat > 38.9 || lng < 124.5 || lng > 132.0) {
+          showError(tLoc("outsideKorea"));
+          setIsLocating(false);
+          return;
+        }
+        setCurrentLocation({ lat, lng });
+        flyTo?.(lat, lng);
+        setIsLocating(false);
+        const res = await fetch(`/api/geocode/reverse?lat=${lat}&lng=${lng}&lang=${locale}`);
+        if (res.ok) {
+          const data = await res.json();
+          setCurrentAddress(data.display);
+        }
+      },
+      (err) => {
+        if (err.code === err.PERMISSION_DENIED) {
+          showError(tLoc("denied"));
+        } else {
+          showError(tLoc("unavailable"));
+        }
+        setIsLocating(false);
+      },
+    );
+  };
 
   return (
     <div className="h-screen flex flex-col">
@@ -95,24 +149,48 @@ export default function Home() {
           <SearchBar />
         </div>
 
-        {/* Desktop: legend + zoom as a pair */}
+        {/* Current location address badge */}
+        {currentAddress && (
+          <div className="absolute top-17 md:top-3 right-3 z-1000 flex items-center gap-2 bg-gray-900/75 rounded-full px-4 py-2 shadow-md text-xs font-medium text-white">
+            <span className="w-2 h-2 rounded-full bg-green-400 shrink-0" />
+            {tLoc("current")} {currentAddress}
+          </div>
+        )}
+
+        {/* Location error message */}
+        {locationError && (
+          <div className="absolute top-17 md:top-3 right-3 z-1001 flex items-center bg-gray-900/75 text-white text-xs font-medium rounded-full px-4 py-2 shadow-md text-center">
+            {locationError}
+          </div>
+        )}
+
+        {/* Desktop: legend + zoom + location */}
         <div className="hidden md:flex absolute right-3 bottom-3 z-1000 items-end gap-2">
           <Legend align="right" />
-          <div className="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
+          <div className="flex flex-col gap-2">
             <button
-              onClick={() => zoomIn?.()}
-              className="flex items-center justify-center w-8 h-8 text-gray-600 hover:bg-gray-50 border-b border-gray-200 text-xl font-light"
-              aria-label="Zoom in"
+              onClick={handleLocate}
+              className={`flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 bg-white shadow-lg hover:bg-gray-50 ${isLocating ? "text-blue-400 animate-pulse" : "text-gray-600"}`}
+              aria-label="My location"
             >
-              +
+              <LocateFixed size={18} />
             </button>
-            <button
-              onClick={() => zoomOut?.()}
-              className="flex items-center justify-center w-8 h-8 text-gray-600 hover:bg-gray-50 text-xl font-light"
-              aria-label="Zoom out"
-            >
-              −
-            </button>
+            <div className="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
+              <button
+                onClick={() => zoomIn?.()}
+                className="flex items-center justify-center w-8 h-8 text-gray-600 hover:bg-gray-50 border-b border-gray-200 text-xl font-light"
+                aria-label="Zoom in"
+              >
+                +
+              </button>
+              <button
+                onClick={() => zoomOut?.()}
+                className="flex items-center justify-center w-8 h-8 text-gray-600 hover:bg-gray-50 text-xl font-light"
+                aria-label="Zoom out"
+              >
+                −
+              </button>
+            </div>
           </div>
         </div>
 
@@ -149,6 +227,7 @@ export default function Home() {
         <div className="absolute -top-10 left-3">
           <Legend align="left" />
         </div>
+        {/* Zoom buttons */}
         <div className="absolute -top-18 right-3 flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
           <button
             onClick={() => zoomIn?.()}
@@ -161,6 +240,14 @@ export default function Home() {
             aria-label="Zoom out"
           >−</button>
         </div>
+        {/* Location button — separated above zoom with a gap */}
+        <button
+          onClick={handleLocate}
+          className={`absolute -top-28 right-3 flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 bg-white shadow-lg hover:bg-gray-50 ${isLocating ? "text-blue-400 animate-pulse" : "text-gray-600"}`}
+          aria-label="My location"
+        >
+          <LocateFixed size={18} />
+        </button>
 
         {/* Handle bar — always visible as peek */}
         <div
