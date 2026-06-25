@@ -20,7 +20,7 @@ const LINE_LAYERS: Record<string, { color: string }> = {
   "safe-return-routes": { color: "#00c976" },
 };
 
-type LayerId = "IF_0085_WMS" | "IF_0083_WMS" | "IF_0079_WMS" | "IF_0078_WMS" | "cctv" | "smart-street-lights" | "emergency-bells" | "delivery-boxes" | "IF_0102_WMS" | "safe-return-routes" | "safe-stores" | "IF_0023_WMS" | "IF_0036_WMS" | "IF_0032_WMS";
+type LayerId = "IF_0085_WMS" | "IF_0083_WMS" | "IF_0079_WMS" | "IF_0078_WMS" | "cctv" | "smart-street-lights" | "emergency-bells" | "delivery-boxes" | "IF_0102_WMS" | "safe-return-routes" | "safe-stores" | "IF_0023_WMS" | "IF_0032_WMS" | "police-facilities";
 
 export default function Legend({ align = "right" }: { align?: "left" | "right" }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -54,11 +54,11 @@ export default function Legend({ align = "right" }: { align?: "left" | "right" }
     <div className="relative">
       {isOpen && (
         <div
-          className={`absolute bottom-full mb-2 w-56 bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden ${align === "right" ? "right-0" : "left-0"}`}
+          className={`absolute bottom-full mb-2 w-72 bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden ${align === "right" ? "right-0" : "left-0"}`}
         >
           {/* Header */}
           <div className="flex items-center justify-between px-3 py-2 border-b border-gray-100">
-            <span className="text-xs font-bold text-gray-800">{t("title")}</span>
+            <span className="text-sm font-bold text-gray-800">{t("title")}</span>
             <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-gray-600">
               <X size={13} />
             </button>
@@ -78,7 +78,7 @@ export default function Legend({ align = "right" }: { align?: "left" | "right" }
                     className="flex items-center gap-1.5 px-3 py-2 w-full text-left"
                   >
                     <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: color }} />
-                    <span className="text-xs font-bold flex-1" style={{ color }}>
+                    <span className="text-sm font-bold flex-1" style={{ color }}>
                       {tCategories(cat.id)}
                     </span>
                     <ChevronDown
@@ -98,7 +98,7 @@ export default function Legend({ align = "right" }: { align?: "left" | "right" }
                           return (
                             <div key={layer.id} className="flex flex-col gap-1">
                               <div className="flex items-center justify-between">
-                                <span className="text-xs font-semibold text-gray-700">{tLayers(layer.id)}</span>
+                                <span className="text-sm font-semibold text-gray-700">{tLayers(layer.id)}</span>
                                 <button
                                   onClick={() => toggleInfo(layer.id)}
                                   className={`shrink-0 transition-colors rounded-full p-0.5 ${isInfoOpen ? "bg-gray-200 text-gray-600" : "bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600"}`}
@@ -110,7 +110,7 @@ export default function Legend({ align = "right" }: { align?: "left" | "right" }
                                 className="h-2.5 rounded-sm w-full"
                                 style={{ background: "linear-gradient(to right, #fef08a, #ef4444)" }}
                               />
-                              <div className="flex justify-between text-[10px] text-gray-400">
+                              <div className="flex justify-between text-xs text-gray-400">
                                 <span>{t("low")}</span>
                                 <span>{t("high")}</span>
                               </div>
@@ -120,11 +120,11 @@ export default function Legend({ align = "right" }: { align?: "left" | "right" }
                                     className="w-8 h-2.5 rounded-sm shrink-0"
                                     style={{ backgroundColor: "rgba(120, 120, 120, 0.6)" }}
                                   />
-                                  <span className="text-[10px] text-gray-500">{t("noSafetyLabel")}</span>
+                                  <span className="text-xs text-gray-500">{t("noSafetyLabel")}</span>
                                 </div>
                               )}
                               {isInfoOpen && (
-                                <div className="text-[10px] text-gray-500 bg-white bg-opacity-70 rounded-md px-2 py-1.5 leading-relaxed border border-gray-100 mt-0.5 whitespace-pre-line">
+                                <div className="text-xs text-gray-500 bg-white bg-opacity-70 rounded-md px-2 py-1.5 leading-relaxed border border-gray-100 mt-0.5 whitespace-pre-line">
                                   {t(`layerInfo.${layer.id as LayerId}`)}
                                 </div>
                               )}
@@ -142,7 +142,7 @@ export default function Legend({ align = "right" }: { align?: "left" | "right" }
                             );
                           }
                           if ("icon" in layer && typeof layer.icon === "string") {
-                            return <Image src={layer.icon} alt="" width={14} height={14} className="shrink-0" />;
+                            return <Image src={layer.icon} alt="" width={16} height={16} className="shrink-0" style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.35))" }} />;
                           }
                           return null;
                         };
@@ -151,7 +151,7 @@ export default function Legend({ align = "right" }: { align?: "left" | "right" }
                           <div key={layer.id} className="flex flex-col gap-1">
                             <div className="flex items-center gap-2">
                               {renderInlineVisual()}
-                              <span className="text-xs font-semibold text-gray-700 flex-1">{tLayers(layer.id)}</span>
+                              <span className="text-sm font-semibold text-gray-700 flex-1">{tLayers(layer.id)}</span>
                               <button
                                 onClick={() => toggleInfo(layer.id)}
                                 className={`shrink-0 transition-colors rounded-full p-0.5 ${isInfoOpen ? "bg-gray-200 text-gray-600" : "bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600"}`}
@@ -159,8 +159,18 @@ export default function Legend({ align = "right" }: { align?: "left" | "right" }
                                 <Info size={12} />
                               </button>
                             </div>
+                            {"subItems" in layer && Array.isArray(layer.subItems) && (
+                              <div className="grid grid-cols-2 gap-x-2 gap-y-1 bg-gray-50 border border-gray-100 rounded-lg px-2 py-1.5">
+                                {(layer.subItems as { label: string; icon: string; color: string }[]).map((sub) => (
+                                  <div key={sub.label} className="flex items-center gap-1">
+                                    <Image src={sub.icon} alt="" width={13} height={13} style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.35))" }} />
+                                    <span className="text-xs text-gray-600">{tLayers(sub.label)}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
                             {isInfoOpen && (
-                              <div className="text-[10px] text-gray-500 bg-white bg-opacity-70 rounded-md px-2 py-1.5 leading-relaxed border border-gray-100 whitespace-pre-line">
+                              <div className="text-xs text-gray-500 bg-white bg-opacity-70 rounded-md px-2 py-1.5 leading-relaxed border border-gray-100 whitespace-pre-line">
                                 {t(`layerInfo.${layer.id as LayerId}`)}
                               </div>
                             )}

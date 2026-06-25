@@ -58,13 +58,6 @@ export const BASE_LAYERS = [
     format: "image/png",
     transparent: false,
   },
-  {
-    id: "IF_0036_WMS",
-    name: "치안시설",
-    layers: "A2SM_CMMNPOI2",
-    styles: "A2SM_CmmnPoi2",
-    format: "image/png",
-  },
 ];
 
 export const WMS_LAYERS = BASE_LAYERS.map((layer) => ({
@@ -123,6 +116,18 @@ export const LAYER_CATEGORIES = [
         name: "보안등",
         type: "wms",
         icon: "/icon-security-light.png",
+      },
+      {
+        id: "police-facilities",
+        name: "경찰관서",
+        type: "point",
+        icon: "/icon-police-station.svg",
+        subItems: [
+          { label: "police-station-type", icon: "/icon-police-station.svg", color: "#0F2042" },
+          { label: "police-district-type", icon: "/icon-district-office.svg", color: "#1E40AF" },
+          { label: "police-sub-type", icon: "/icon-substation.svg", color: "#0A8491" },
+          { label: "police-booth-type", icon: "/icon-police-booth.svg", color: "#64748B" },
+        ],
       },
     ],
   },
