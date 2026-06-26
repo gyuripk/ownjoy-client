@@ -52,7 +52,6 @@
   filter: saturate(0.4) brightness(1.05);
 }
 
-
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -132,4 +131,21 @@
   html {
     @apply font-sans;
   }
+}
+
+.leaflet-popup-content-wrapper {
+  padding: 0 !important;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  width: max-content !important;
+  min-width: 0 !important;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  width: auto !important;
+}
+
+.leaflet-popup-content p {
+  margin: 0 !important;
 }

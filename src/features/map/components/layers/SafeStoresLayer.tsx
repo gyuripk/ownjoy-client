@@ -6,6 +6,9 @@ import L from "leaflet";
 import "./cluster-styles.css";
 import { createMarkerIcon } from "./markerIcon";
 import { getBbox } from "../../utils/mapUtils";
+import { useTranslations } from "next-intl";
+import MarkerPopup from "../MarkerPopup";
+import { usePopupOpen } from "../../hooks/usePopupOpen";
 
 interface SafeStoreFeature {
   type: "Feature";
@@ -34,6 +37,8 @@ async function fetchStores(bbox: string): Promise<SafeStoreCollection> {
 
 export default function SafeStoresLayer() {
   const map = useMap();
+  const t = useTranslations("popup");
+  const popupOpen = usePopupOpen();
   const [stores, setStores] = useState<SafeStoreCollection | null>(null);
 
   useEffect(() => {
@@ -43,10 +48,12 @@ export default function SafeStoresLayer() {
 
   useMapEvents({
     moveend: () => {
+      if (popupOpen.current) return;
       if (map.getZoom() < 14) return void setStores(null);
       fetchStores(getBbox(map)).then(setStores);
     },
     zoomend: () => {
+      if (popupOpen.current) return;
       if (map.getZoom() < 14) return void setStores(null);
       fetchStores(getBbox(map)).then(setStores);
     },
@@ -67,12 +74,22 @@ export default function SafeStoresLayer() {
         })
       }
     >
-      {stores.features.map((feature, index) => (
+      {stores.features.map((feature) => (
         <Marker
-          key={index}
+          key={feature.properties.id}
           position={[feature.geometry.coordinates[1], feature.geometry.coordinates[0]]}
           icon={safeStoreIcon}
-        />
+        >
+          <MarkerPopup
+            title={feature.properties.name}
+            details={[
+              { label: t("address"), value: feature.properties.road_address },
+              { label: t("phone"), value: feature.properties.phone },
+              { label: t("station"), value: feature.properties.police_station },
+              { label: t("operating"), value: feature.properties.is_operating },
+            ]}
+          />
+        </Marker>
       ))}
     </MarkerClusterGroup>
   );

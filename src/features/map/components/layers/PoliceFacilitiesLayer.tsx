@@ -6,6 +6,9 @@ import { createMarkerIcon } from "./markerIcon";
 import { useEffect, useState } from "react";
 import { useMap, useMapEvents, Marker } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
+import { useTranslations } from "next-intl";
+import MarkerPopup from "../MarkerPopup";
+import { usePopupOpen } from "../../hooks/usePopupOpen";
 
 // define interface (types)
 interface PoliceFeature {
@@ -16,6 +19,7 @@ interface PoliceFeature {
     name: string;
     facility_type: string;
     road_address: string;
+    phone: string;
     police_agency: string;
     police_station: string;
   };
@@ -69,8 +73,9 @@ async function fetchPolices(bbox: string): Promise<PoliceCollection> {
 }
 // export component
 export default function PoliceFacilitiesLayer() {
-  // create map
   const map = useMap();
+  const t = useTranslations("popup");
+  const popupOpen = usePopupOpen();
   const [polices, setPolices] = useState<PoliceCollection | null>(null);
 
   useEffect(() => {
@@ -80,10 +85,12 @@ export default function PoliceFacilitiesLayer() {
 
   useMapEvents({
     moveend: () => {
+      if (popupOpen.current) return;
       if (map.getZoom() < 11) return void setPolices(null);
       fetchPolices(getBbox(map)).then(setPolices);
     },
     zoomend: () => {
+      if (popupOpen.current) return;
       if (map.getZoom() < 11) return void setPolices(null);
       fetchPolices(getBbox(map)).then(setPolices);
     },
@@ -104,15 +111,26 @@ export default function PoliceFacilitiesLayer() {
         })
       }
     >
-      {polices.features.map((feature, index) => (
+      {polices.features.map((feature) => (
         <Marker
-          key={index}
+          key={feature.properties.source_id}
           position={[
             feature.geometry.coordinates[1],
             feature.geometry.coordinates[0],
           ]}
           icon={getPoliceIcon(feature.properties.facility_type)}
-        />
+        >
+          <MarkerPopup
+            title={feature.properties.name}
+            subtitle={feature.properties.facility_type}
+            details={[
+              { label: t("address"), value: feature.properties.road_address },
+              { label: t("phone"), value: feature.properties.phone },
+              { label: t("agency"), value: feature.properties.police_agency },
+              { label: t("station"), value: feature.properties.police_station },
+            ]}
+          />
+        </Marker>
       ))}
     </MarkerClusterGroup>
   );
