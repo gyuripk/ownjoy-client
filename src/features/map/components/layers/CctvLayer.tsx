@@ -6,6 +6,9 @@ import L from "leaflet";
 import "./cluster-styles.css";
 import { createMarkerIcon } from "./markerIcon";
 import { getBbox } from "../../utils/mapUtils";
+import { useTranslations } from "next-intl";
+import MarkerPopup from "../MarkerPopup";
+import { usePopupOpen } from "../../hooks/usePopupOpen";
 
 interface CctvFeature {
   type: "Feature";
@@ -33,6 +36,8 @@ async function fetchCctvs(bbox: string): Promise<CctvCollection> {
 
 export default function CctvLayer() {
   const map = useMap();
+  const t = useTranslations("popup");
+  const popupOpen = usePopupOpen();
   const [cctvs, setCctvs] = useState<CctvCollection | null>(null);
 
   useEffect(() => {
@@ -42,10 +47,12 @@ export default function CctvLayer() {
 
   useMapEvents({
     moveend: () => {
+      if (popupOpen.current) return;
       if (map.getZoom() < 14) return void setCctvs(null);
       fetchCctvs(getBbox(map)).then(setCctvs);
     },
     zoomend: () => {
+      if (popupOpen.current) return;
       if (map.getZoom() < 14) return void setCctvs(null);
       fetchCctvs(getBbox(map)).then(setCctvs);
     },
@@ -66,12 +73,20 @@ export default function CctvLayer() {
         })
       }
     >
-      {cctvs.features.map((feature, index) => (
+      {cctvs.features.map((feature) => (
         <Marker
-          key={index}
+          key={feature.properties.source_id}
           position={[feature.geometry.coordinates[1], feature.geometry.coordinates[0]]}
           icon={cctvIcon}
-        />
+        >
+          <MarkerPopup
+            title={feature.properties.purpose}
+            details={[
+              { label: t("address"), value: feature.properties.road_address },
+              { label: t("cameraCount"), value: String(feature.properties.camera_count) },
+            ]}
+          />
+        </Marker>
       ))}
     </MarkerClusterGroup>
   );
